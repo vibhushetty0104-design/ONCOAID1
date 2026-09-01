@@ -91,13 +91,13 @@ export function PatientJourneyView() {
                   </span>
 
                   <span
-                    className={`mt-2 text-[10px] font-semibold uppercase tracking-wider ${
+                    className={`mt-2 text-[11px] font-semibold uppercase tracking-wider ${
                       isSelected
-                        ? "text-white-soft/75"
+                        ? "text-mint font-bold"
                         : isCurrent
-                          ? "text-coral"
+                          ? "text-coral font-bold"
                           : isCompleted
-                            ? "text-emerald-700"
+                            ? "text-emerald-800 font-bold"
                             : "text-warm-gray"
                     }`}
                   >

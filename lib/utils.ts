@@ -5,7 +5,7 @@ export function cn(...classes: Array<string | false | null | undefined>) {
 export const site = {
   name: "ONCO—AID",
   namePlain: "ONCO-AID",
-  url: "https://onco-aid.example",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://onco-aid.example",
   description:
     "ONCO-AID helps you understand your cancer journey, prepare for care, find the right specialists, and know what comes next. Educational guidance — not a replacement for your care team.",
 };

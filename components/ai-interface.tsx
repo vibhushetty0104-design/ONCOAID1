@@ -2,8 +2,18 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { MarkdownRenderer } from "@/components/markdown-renderer";
 
-type Msg = { id: string; role: "user" | "assistant"; content: string; timestamp: string };
+type Msg = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: string;
+  provider?: string;
+  cached?: boolean;
+  doctorQuestions?: string[];
+  suggestedFollowUps?: string[];
+};
 
 const taskCategories = [
   {
@@ -58,6 +68,7 @@ export function AIInterface() {
       content:
         "Welcome to **ONCO-AID Clinical Assistant**.\n\nI am an educational guide built to help you decode pathology reports, structure questions for your oncology team, and understand treatment steps in calm, plain language.\n\nChoose an active task above or type your clinical question below.",
       timestamp: "Just now",
+      provider: "ONCO-AID Clinical Intelligence",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -75,20 +86,51 @@ export function AIInterface() {
     const userMsgId = `user-${Date.now()}`;
     const nowStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    setMessages((m) => [...m, { id: userMsgId, role: "user", content, timestamp: nowStr }]);
+    const updatedMessages = [
+      ...messages,
+      { id: userMsgId, role: "user" as const, content, timestamp: nowStr },
+    ];
+    setMessages(updatedMessages);
     setLoading(true);
 
     try {
+      // Build conversation history payload
+      const conversationHistory = updatedMessages
+        .filter((m) => m.id !== "init-1")
+        .slice(-4)
+        .map((m) => ({ role: m.role, content: m.content }));
+
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: content }),
+        body: JSON.stringify({
+          prompt: content,
+          taskHint: activeTask,
+          conversationHistory,
+        }),
       });
-      const data = (await res.json()) as { message: string };
+
+      const data = (await res.json()) as {
+        message: string;
+        provider?: string;
+        cached?: boolean;
+        doctorQuestions?: string[];
+        suggestedFollowUps?: string[];
+      };
+
       const assistantMsgId = `assistant-${Date.now()}`;
       setMessages((m) => [
         ...m,
-        { id: assistantMsgId, role: "assistant", content: data.message, timestamp: nowStr },
+        {
+          id: assistantMsgId,
+          role: "assistant",
+          content: data.message || "No response generated.",
+          timestamp: nowStr,
+          provider: data.provider,
+          cached: data.cached,
+          doctorQuestions: data.doctorQuestions,
+          suggestedFollowUps: data.suggestedFollowUps,
+        },
       ]);
     } catch {
       setMessages((m) => [
@@ -106,10 +148,27 @@ export function AIInterface() {
     }
   }
 
-  function handleCopy(id: string, text: string) {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  async function handleCopy(id: string, text: string) {
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+      } else if (typeof document !== "undefined") {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+      }
+    } catch {
+      // Graceful silence
+    }
   }
 
   const selectedCategoryObj = taskCategories.find((c) => c.id === activeTask) || taskCategories[0];
@@ -193,46 +252,55 @@ export function AIInterface() {
             className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] text-white-soft/50">{msg.role === "user" ? "You" : "ONCO-AID Guide"}</span>
+              <span className="text-[11px] text-white-soft/50">
+                {msg.role === "user" ? "You" : "ONCO-AID Guide"}
+              </span>
               <span className="text-[11px] text-white-soft/35">• {msg.timestamp}</span>
+              {msg.cached && (
+                <span className="text-[10px] text-cyan/75 rounded bg-cyan/10 px-1 py-0.2">
+                  ⚡ Cached
+                </span>
+              )}
             </div>
             <div
-              className={`group relative max-w-[92%] rounded-2xl p-4 text-[15px] leading-relaxed md:max-w-[85%] ${
+              className={`group relative max-w-[92%] rounded-2xl p-4 md:max-w-[85%] ${
                 msg.role === "user"
                   ? "bg-forest-mid text-white-soft border border-white-soft/15"
                   : "border border-white-soft/10 bg-white-soft/8 text-white-soft/95"
               }`}
             >
-              <div className="whitespace-pre-wrap font-sans">
-                {msg.content.split("\n\n").map((paragraph, pIdx) => {
-                  if (paragraph.startsWith("### ")) {
-                    return (
-                      <h3 key={pIdx} className="text-[18px] font-semibold text-mint my-2">
-                        {paragraph.replace("### ", "")}
-                      </h3>
-                    );
-                  }
-                  if (paragraph.startsWith("#### ")) {
-                    return (
-                      <h4 key={pIdx} className="text-[15px] font-medium text-mint-deep my-1.5">
-                        {paragraph.replace("#### ", "")}
-                      </h4>
-                    );
-                  }
-                  return (
-                    <p key={pIdx} className="mb-2 last:mb-0">
-                      {paragraph}
-                    </p>
-                  );
-                })}
-              </div>
+              {/* Structured Markdown Message Body */}
+              <MarkdownRenderer content={msg.content} />
 
+              {/* Follow-up Prompts if returned */}
+              {msg.suggestedFollowUps && msg.suggestedFollowUps.length > 0 && (
+                <div className="mt-4 border-t border-white-soft/10 pt-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-mint mb-2">
+                    Related follow-ups
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {msg.suggestedFollowUps.map((fu, fIdx) => (
+                      <button
+                        key={fIdx}
+                        type="button"
+                        onClick={() => void send(fu)}
+                        className="rounded-lg border border-white-soft/12 bg-white-soft/6 px-2.5 py-1 text-[12px] text-white-soft/80 hover:bg-white-soft/12 hover:text-white-soft transition-colors"
+                      >
+                        {fu} →
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Assistant Message Footer */}
               {msg.role === "assistant" && (
-                <div className="mt-3 flex items-center justify-end gap-2 border-t border-white-soft/10 pt-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                <div className="mt-3 flex items-center justify-between border-t border-white-soft/10 pt-2 text-[12px] text-white-soft/40">
+                  <span className="text-[11px] italic">{msg.provider || "ONCO-AID"}</span>
                   <button
                     type="button"
                     onClick={() => handleCopy(msg.id, msg.content)}
-                    className="text-[12px] text-mint hover:underline"
+                    className="text-mint hover:underline font-medium"
                   >
                     {copiedId === msg.id ? "✓ Copied to clipboard" : "Copy note"}
                   </button>

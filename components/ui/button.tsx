@@ -6,9 +6,15 @@ type ButtonProps = {
   children: React.ReactNode;
   variant?: "primary" | "coral" | "ghost" | "inverse" | "link";
   className?: string;
-  type?: "button" | "submit";
+  type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
+  id?: string;
+  target?: string;
+  rel?: string;
+  "aria-label"?: string;
+  "aria-expanded"?: boolean;
+  "aria-controls"?: string;
 };
 
 export function Button({
@@ -19,6 +25,12 @@ export function Button({
   type = "button",
   disabled,
   onClick,
+  target,
+  rel,
+  id,
+  "aria-label": ariaLabel,
+  "aria-expanded": ariaExpanded,
+  "aria-controls": ariaControls,
 }: ButtonProps) {
   const styles = {
     primary:
@@ -34,20 +46,53 @@ export function Button({
 
   const cls = cn(
     "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium tracking-[0.02em] transition-all duration-[180ms] ease-[cubic-bezier(0.22,1,0.36,1)] disabled:opacity-40 disabled:pointer-events-none",
+    disabled && "opacity-40 pointer-events-none cursor-not-allowed",
     styles,
     className,
   );
 
   if (href) {
+    if (disabled) {
+      return (
+        <span
+          id={id}
+          role="link"
+          aria-disabled="true"
+          aria-label={ariaLabel}
+          className={cls}
+        >
+          {children}
+        </span>
+      );
+    }
     return (
-      <Link href={href} className={cls}>
+      <Link
+        id={id}
+        href={href}
+        className={cls}
+        target={target}
+        rel={rel}
+        aria-label={ariaLabel}
+        aria-expanded={ariaExpanded}
+        aria-controls={ariaControls}
+        onClick={onClick}
+      >
         {children}
       </Link>
     );
   }
 
   return (
-    <button type={type} className={cls} disabled={disabled} onClick={onClick}>
+    <button
+      id={id}
+      type={type}
+      className={cls}
+      disabled={disabled}
+      onClick={onClick}
+      aria-label={ariaLabel}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
+    >
       {children}
     </button>
   );

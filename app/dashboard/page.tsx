@@ -84,21 +84,21 @@ export default function PatientDashboardPage() {
             {/* Visual Mini Stepper */}
             <div className="mt-6 border-t border-forest/8 pt-5">
               <div className="grid grid-cols-4 gap-2 text-center text-[12px]">
-                <div className="rounded-xl bg-emerald-50 p-2 border border-emerald-500/20 text-emerald-800">
-                  <span className="font-bold">✓ 01. Consult</span>
-                  <p className="text-[10px] text-emerald-700">Done</p>
+                <div className="rounded-xl bg-emerald-50 p-2.5 border border-emerald-500/20 text-emerald-900">
+                  <span className="font-bold block">✓ 01. Consult</span>
+                  <p className="text-[11px] text-emerald-800 font-semibold">Done</p>
                 </div>
-                <div className="rounded-xl bg-emerald-50 p-2 border border-emerald-500/20 text-emerald-800">
-                  <span className="font-bold">✓ 02. Biopsy</span>
-                  <p className="text-[10px] text-emerald-700">Done</p>
+                <div className="rounded-xl bg-emerald-50 p-2.5 border border-emerald-500/20 text-emerald-900">
+                  <span className="font-bold block">✓ 02. Biopsy</span>
+                  <p className="text-[11px] text-emerald-800 font-semibold">Done</p>
                 </div>
-                <div className="rounded-xl bg-forest text-white-soft p-2 shadow-sm">
-                  <span className="font-bold">● 03. Pathology</span>
-                  <p className="text-[10px] text-mint">Current</p>
+                <div className="rounded-xl bg-forest text-white-soft p-2.5 shadow-sm">
+                  <span className="font-bold block">● 03. Pathology</span>
+                  <p className="text-[11px] text-mint font-semibold">Current</p>
                 </div>
-                <div className="rounded-xl bg-ivory p-2 border border-forest/8 text-warm-gray">
-                  <span>○ 04. Staging</span>
-                  <p className="text-[10px]">Next</p>
+                <div className="rounded-xl bg-ivory p-2.5 border border-forest/8 text-forest/70">
+                  <span className="font-medium block">○ 04. Staging</span>
+                  <p className="text-[11px] text-warm-gray font-semibold">Next</p>
                 </div>
               </div>
             </div>

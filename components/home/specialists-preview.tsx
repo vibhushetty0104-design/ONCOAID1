@@ -54,9 +54,9 @@ export function SpecialistsPreview() {
                   {featured.degree}
                 </p>
                 <h3 className="editorial-serif mt-2 text-[3rem] leading-none">{featured.name}</h3>
-                <p className="mt-3 text-[14px] text-white-soft/80">{featured.hospital}</p>
-                <p className="mt-4 max-w-md text-white-soft/72 line-clamp-2">{featured.focus}</p>
-                <div className="mt-6 flex items-center gap-2 text-[14px] font-medium text-cyan group-hover:translate-x-1 transition-transform">
+                <p className="mt-3 text-[14.5px] text-white-soft/90 font-medium">{featured.hospital}</p>
+                <p className="mt-4 max-w-md text-white-soft/88 text-[14px] leading-relaxed line-clamp-2">{featured.focus}</p>
+                <div className="mt-6 flex items-center gap-2 text-[14px] font-semibold text-cyan group-hover:translate-x-1 transition-transform">
                   <span>Read Profile & Consult</span>
                   <span>→</span>
                 </div>

@@ -22,9 +22,12 @@ export function AppointmentStepper() {
   const activeDoctor = specialists.find((d) => d.id === selectedDoctorId) || specialists[0];
   const progress = ((step + 1) / steps.length) * 100;
 
-  const availableDoctors = specialists.filter(
-    (d) => (city === "All Cities" || d.city === city) && (specialty === "All Specialties" || d.role === specialty || true)
+  const matchingDoctors = specialists.filter(
+    (d) => (city === "All Cities" || d.city === city) && (specialty === "All Specialties" || d.role === specialty)
   );
+  const availableDoctors = matchingDoctors.length > 0
+    ? matchingDoctors
+    : specialists.filter((d) => city === "All Cities" || d.city === city);
 
   function next() {
     if (step === steps.length - 1) {

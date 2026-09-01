@@ -11,6 +11,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("••••••••••••");
   const [name, setName] = useState("Arjun Mehta");
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,9 +33,11 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md rounded-[32px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)] sm:p-8">
       {/* Tab Switcher */}
-      <div className="flex rounded-2xl bg-ivory p-1 border border-forest/8 mb-6">
+      <div className="flex rounded-2xl bg-ivory p-1 border border-forest/8 mb-6" role="tablist" aria-label="Authentication mode">
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === "signin"}
           onClick={() => setTab("signin")}
           className={`flex-1 rounded-xl py-2 text-[13px] font-semibold transition-all ${
             tab === "signin"
@@ -46,6 +49,8 @@ export function LoginForm() {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === "signup"}
           onClick={() => setTab("signup")}
           className={`flex-1 rounded-xl py-2 text-[13px] font-semibold transition-all ${
             tab === "signup"
@@ -57,6 +62,8 @@ export function LoginForm() {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === "forgot"}
           onClick={() => setTab("forgot")}
           className={`flex-1 rounded-xl py-2 text-[13px] font-semibold transition-all ${
             tab === "forgot"
@@ -71,10 +78,11 @@ export function LoginForm() {
       {tab === "signin" && (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+            <label htmlFor="signin-email" className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
               Email Address
             </label>
             <input
+              id="signin-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -85,18 +93,19 @@ export function LoginForm() {
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray">
+              <label htmlFor="signin-password" className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray">
                 Password
               </label>
               <button
                 type="button"
                 onClick={() => setTab("forgot")}
-                className="text-[12px] text-teal hover:underline"
+                className="text-[12px] text-teal hover:underline font-medium"
               >
                 Forgot?
               </button>
             </div>
             <input
+              id="signin-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -142,10 +151,11 @@ export function LoginForm() {
       {tab === "signup" && (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+            <label htmlFor="signup-name" className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
               Full Name
             </label>
             <input
+              id="signup-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -155,10 +165,11 @@ export function LoginForm() {
             />
           </div>
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+            <label htmlFor="signup-email" className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
               Email Address
             </label>
             <input
+              id="signup-email"
               type="email"
               placeholder="name@example.com"
               className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-4 text-[14px] text-forest outline-none focus:border-cobalt"
@@ -166,10 +177,11 @@ export function LoginForm() {
             />
           </div>
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+            <label htmlFor="signup-password" className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
               Create Password
             </label>
             <input
+              id="signup-password"
               type="password"
               placeholder="••••••••••••"
               className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-4 text-[14px] text-forest outline-none focus:border-cobalt"
@@ -186,19 +198,28 @@ export function LoginForm() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            alert("Password reset instructions sent to registered email.");
-            setTab("signin");
+            setResetSent(true);
+            setTimeout(() => {
+              setResetSent(false);
+              setTab("signin");
+            }, 3000);
           }}
           className="space-y-4"
         >
           <p className="text-[13.5px] text-blue-gray">
             Enter your email address and we will send you a secure link to reset your credentials.
           </p>
+          {resetSent && (
+            <div className="rounded-xl bg-emerald-50 border border-emerald-500/30 p-3 text-[13px] text-emerald-800 font-medium">
+              ✓ Password reset link sent to your email.
+            </div>
+          )}
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+            <label htmlFor="forgot-email" className="block text-[12px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
               Email Address
             </label>
             <input
+              id="forgot-email"
               type="email"
               defaultValue="arjun.mehta@example.com"
               className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-4 text-[14px] text-forest outline-none focus:border-cobalt"
@@ -211,7 +232,7 @@ export function LoginForm() {
         </form>
       )}
 
-      <p className="mt-6 text-center text-[11.5px] leading-relaxed text-warm-gray">
+      <p className="mt-6 text-center text-[12px] leading-relaxed text-warm-gray">
         🔒 Patient privacy is strictly protected under Indian Digital Personal Data Protection (DPDP) and DISHA guidelines.
       </p>
     </div>

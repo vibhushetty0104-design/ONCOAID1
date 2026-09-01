@@ -68,18 +68,18 @@ export function PatientJourney() {
                       </svg>
                     </span>
                     <span className="flex-1">
-                      <span className="pathway-title block text-[22px] font-medium tracking-tight text-forest transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:text-[26px]">
+                      <span className="pathway-title block text-[21px] font-medium tracking-tight text-forest transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:text-[25px]">
                         {item.title}
                       </span>
                       <span
-                        className={`mt-1 block max-w-xl text-[15px] leading-relaxed text-blue-gray transition-opacity duration-[320ms] ${
-                          isActive ? "opacity-100" : "opacity-0 md:opacity-55"
+                        className={`mt-1 block max-w-xl text-[14.5px] leading-relaxed transition-opacity duration-[320ms] ${
+                          isActive ? "text-forest font-medium opacity-100" : "text-blue-gray opacity-80"
                         }`}
                       >
                         {item.description}
                       </span>
                     </span>
-                    <span className="pathway-arrow mt-2 text-forest transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
+                    <span className={`pathway-arrow mt-2 transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${isActive ? "text-coral font-bold" : "text-forest/60"}`}>
                       →
                     </span>
                   </button>
