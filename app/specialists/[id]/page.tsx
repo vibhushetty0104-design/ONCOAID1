@@ -57,10 +57,10 @@ export default async function SpecialistProfilePage({ params }: Props) {
                 {person.role}
               </span>
               <span className="rounded-full bg-cobalt/10 px-3 py-1 text-[12px] font-medium text-cobalt">
-                📍 {person.city}
+                {person.city}
               </span>
-              <span className="rounded-full bg-amber-500/10 px-3 py-1 text-[12px] font-medium text-amber-700">
-                ★ {person.rating}
+              <span className="rounded-full bg-forest/8 px-3 py-1 text-[12px] font-medium text-forest">
+                {person.rating} / 5.0
               </span>
             </div>
 
@@ -120,8 +120,8 @@ export default async function SpecialistProfilePage({ params }: Props) {
           <ul className="mt-6 space-y-3">
             {person.focus.split(", ").map((item) => (
               <li key={item} className="flex items-center gap-3 text-[15px] text-ink font-medium">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-mint/50 text-forest text-[12px] font-bold">
-                  ✓
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-forest/8 text-forest text-[11px] font-bold">
+                  •
                 </span>
                 {item}
               </li>

@@ -25,7 +25,7 @@ export function evaluateClinicalSafety(
     return {
       isSafe: false,
       requiresEmergencyNotice: true,
-      emergencyNotice: `### 🚨 Urgent Clinical Safety Alert
+      emergencyNotice: `### Urgent Clinical Safety Alert
 
 The symptoms you mentioned (such as fever during active chemotherapy, acute chest pain, sudden breathlessness, or heavy bleeding) require **immediate medical evaluation**:
 

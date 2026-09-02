@@ -51,7 +51,7 @@ export default function PatientProfilePage() {
 
       {savedSuccess && (
         <div className="mt-6 rounded-2xl bg-emerald-50 border border-emerald-500/30 p-4 text-[14px] text-emerald-800 font-medium animate-fadeIn">
-          ✓ Patient profile preferences saved successfully.
+          Patient profile preferences saved successfully.
         </div>
       )}
 
@@ -196,7 +196,7 @@ export default function PatientProfilePage() {
                     </span>
                   </div>
                   <p className="text-warm-gray">{apt.specialty} · {apt.hospital}</p>
-                  <p className="text-forest font-medium pt-1">📅 {apt.date} at {apt.time}</p>
+                  <p className="text-forest font-medium pt-1">{apt.date} at {apt.time}</p>
                 </div>
               ))}
             </div>

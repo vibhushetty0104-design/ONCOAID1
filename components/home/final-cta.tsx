@@ -10,15 +10,15 @@ export function FinalCta() {
           <h2 className="editorial-serif max-w-3xl text-[clamp(2.4rem,6vw,5.2rem)]">
             You don&apos;t have to navigate it alone.
           </h2>
-          <p className="mt-6 max-w-lg text-[17px] text-white-soft/72">
-            Start with a specialist search, or ask ONCO-AID to help you name the next useful question.
+          <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white-soft/80">
+            Start by finding a specialist, understanding your report, or preparing questions for your next oncology visit.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Button href="/appointments" variant="coral">
-              Find Care
+            <Button href="/specialists" variant="coral" className="px-6 py-3.5 text-[14.5px] font-semibold">
+              Find a Specialist
             </Button>
-            <Button href="/ai" variant="ghost" className="text-white-soft">
-              Ask ONCO-AID AI
+            <Button href="/ai" variant="ghost" className="border border-white-soft/20 text-white-soft px-6 py-3.5 text-[14.5px]">
+              Talk to ONCO-AID
             </Button>
           </div>
         </Reveal>

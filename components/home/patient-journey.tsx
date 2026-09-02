@@ -40,10 +40,13 @@ export function PatientJourney() {
     <section id="journey" className="bg-ivory py-24 md:py-32">
       <div className="container-page">
         <Reveal>
-          <p className="label text-teal">Your pathway</p>
-          <h2 className="editorial-serif mt-4 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
-            Where are you in your cancer journey?
+          <p className="label text-teal">Patient Navigation</p>
+          <h2 className="editorial-serif mt-3 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
+            Know what comes next.
           </h2>
+          <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-blue-gray">
+            Cancer care can feel like a series of unfamiliar decisions. ONCO-AID helps you understand where you are, what comes next, and what to discuss with your care team.
+          </p>
         </Reveal>
 
         <div className="mt-14 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,380px)]">

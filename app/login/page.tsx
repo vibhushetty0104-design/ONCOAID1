@@ -28,15 +28,21 @@ export default function LoginPage() {
 
           <div className="grid gap-3 pt-2 text-[14px] text-ink/85">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-mint text-forest font-bold text-[11px]">✓</span>
+              <svg className="h-4 w-4 text-teal shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
               <span>Encrypted pathology & biopsy report storage</span>
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-mint text-forest font-bold text-[11px]">✓</span>
+              <svg className="h-4 w-4 text-teal shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
               <span>Step-by-step milestone guidance between visits</span>
             </div>
             <div className="flex items-center gap-2.5">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-mint text-forest font-bold text-[11px]">✓</span>
+              <svg className="h-4 w-4 text-teal shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
               <span>Direct access to Indian specialist directory & booking</span>
             </div>
           </div>

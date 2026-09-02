@@ -20,18 +20,18 @@ export function SpecialistsPreview() {
         <Reveal>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="label text-teal">Indian Specialist Directory</p>
+              <p className="label text-teal">Specialist Directory</p>
               <h2 className="editorial-serif mt-3 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
-                Find the specialists shaping your care.
+                Find the right specialist for your care.
               </h2>
+              <p className="mt-3 text-[16px] text-blue-gray max-w-2xl">
+                Explore oncology specialists across India by specialty, location and area of expertise.
+              </p>
             </div>
             <Button href="/specialists" variant="primary">
-              View All 10+ Specialists →
+              View All Specialists →
             </Button>
           </div>
-          <p className="mt-4 text-[14px] text-warm-gray">
-            Sample clinician profiles across Bengaluru, Mumbai, Chennai, New Delhi, Hyderabad & Pune.
-          </p>
         </Reveal>
 
         <div className="mt-14 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
@@ -45,7 +45,7 @@ export function SpecialistsPreview() {
               <div className="flex items-center justify-between">
                 <span className="label text-mint">{featured.role}</span>
                 <span className="rounded-full bg-white-soft/10 px-3 py-1 text-[12px] text-mint">
-                  📍 {featured.city}
+                  {featured.city}
                 </span>
               </div>
 

@@ -59,7 +59,7 @@ export function ReportViewer() {
                     : "bg-white-soft text-forest hover:bg-ivory"
                 }`}
               >
-                📄 {report.title}
+                {report.title}
               </button>
             ))}
           </div>
@@ -70,7 +70,7 @@ export function ReportViewer() {
           variant="coral"
           className="text-[14px]"
         >
-          Ask AI Custom Report Questions →
+          Ask custom report questions →
         </Button>
       </div>
 
@@ -83,14 +83,14 @@ export function ReportViewer() {
               <span className="label text-warm-gray">Pathology Laboratory Record</span>
               <h2 className="mt-1 font-serif text-[1.8rem] text-forest">{activeReport.title}</h2>
             </div>
-            <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[12px] font-medium text-emerald-700">
-              Fictional Demo Report
+            <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[12px] font-medium text-emerald-800">
+              Sample Report
             </span>
           </div>
 
-          <div className="mt-4 flex flex-wrap justify-between text-[13px] text-warm-gray">
-            <p>📅 Date: <strong>{activeReport.date}</strong></p>
-            <p>🏛️ Facility: <strong>{activeReport.facility}</strong></p>
+          <div className="mt-4 flex flex-wrap gap-4 text-[13px] text-warm-gray">
+            <p>Date: <strong className="text-forest">{activeReport.date}</strong></p>
+            <p>Facility: <strong className="text-forest">{activeReport.facility}</strong></p>
           </div>
 
           {/* Interactive Text Body */}
@@ -119,15 +119,15 @@ export function ReportViewer() {
             )}
           </div>
 
-          <p className="mt-4 text-[13px] text-warm-gray italic">
-            💡 Click on any highlighted medical term above to open its plain-language breakdown and questions for your doctor.
+          <p className="mt-4 text-[13.5px] text-blue-gray">
+            Click any highlighted term above to open its clinical meaning and discussion questions for your care team.
           </p>
 
           {/* Paste/Upload Custom Report Simulator */}
           <div className="mt-8 border-t border-forest/10 pt-6">
-            <h3 className="text-[15px] font-semibold text-forest">Analyze Your Own Report Text</h3>
+            <h3 className="text-[15px] font-semibold text-forest">Analyze Report Text</h3>
             <p className="text-[13px] text-blue-gray mt-1">
-              Paste pathology or scan text below for immediate AI plain-language parsing:
+              Paste pathology or scan text below for immediate plain-language clinical translation:
             </p>
 
             <textarea
@@ -144,12 +144,12 @@ export function ReportViewer() {
               disabled={isAnalyzingCustom || !customReportText.trim()}
               className="mt-3 inline-flex items-center gap-2 rounded-full bg-forest px-5 py-2.5 text-[14px] font-medium text-white-soft transition-colors hover:bg-forest-mid disabled:opacity-50"
             >
-              {isAnalyzingCustom ? "Analyzing Report..." : "Decode Report Excerpt →"}
+              {isAnalyzingCustom ? "Analyzing Report..." : "Translate Report Excerpt →"}
             </button>
 
             {customAnalysis ? (
               <div className="mt-4 rounded-2xl bg-forest/5 p-5 border border-forest/15 text-[14px] leading-relaxed text-ink">
-                <p className="font-semibold text-forest mb-2">AI Analysis Result:</p>
+                <p className="font-semibold text-forest mb-2">Clinical Explanation:</p>
                 <div className="whitespace-pre-wrap">{customAnalysis}</div>
               </div>
             ) : null}
@@ -165,7 +165,7 @@ export function ReportViewer() {
               <div className="flex items-center justify-between">
                 <span className="label text-cyan">{activeTermObj.category}</span>
                 <span className="rounded-full bg-white-soft/10 px-3 py-1 text-[11px] text-white-soft/70">
-                  Plain-Language Guide
+                  Clinical Guide
                 </span>
               </div>
 
@@ -183,7 +183,7 @@ export function ReportViewer() {
 
                 <div className="rounded-2xl bg-white-soft/6 p-5 border border-white-soft/10">
                   <h4 className="text-[13px] font-semibold uppercase tracking-wider text-amber-300">
-                    💡 Questions for Your Doctor Visit
+                    Questions for Your Doctor Visit
                   </h4>
                   <p className="mt-2 text-[15px] leading-relaxed text-white-soft/90 italic">
                     &quot;{activeTermObj.ask}&quot;

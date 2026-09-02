@@ -81,7 +81,7 @@ export default function AppointmentsPage() {
                   <div className="flex items-center gap-2">
                     <span className="label text-teal">{apt.specialty}</span>
                     <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
-                      ● {apt.status}
+                      {apt.status}
                     </span>
                   </div>
                   <h2 className="editorial-serif mt-2 text-[2.2rem] text-forest">
@@ -103,7 +103,7 @@ export default function AppointmentsPage() {
               <div className="mt-6 grid gap-4 rounded-2xl bg-ivory p-5 text-[14px] sm:grid-cols-3">
                 <div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-warm-gray block">Date & Time</span>
-                  <p className="font-semibold text-forest mt-0.5 text-[15px]">📅 {apt.date}</p>
+                  <p className="font-semibold text-forest mt-0.5 text-[15px]">{apt.date}</p>
                   <p className="text-blue-gray text-[13px]">{apt.time}</p>
                 </div>
                 <div>
@@ -120,7 +120,7 @@ export default function AppointmentsPage() {
 
               {/* Prep Instructions */}
               <div className="mt-5 rounded-2xl bg-forest/5 p-4 border border-forest/10 text-[13.5px]">
-                <strong className="text-forest">📋 Visit Preparation Checklist:</strong>
+                <strong className="text-forest">Visit Preparation Checklist:</strong>
                 <p className="text-ink/85 mt-1">{apt.prepNotes}</p>
               </div>
 
@@ -128,7 +128,7 @@ export default function AppointmentsPage() {
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 pt-2">
                 <div className="flex items-center gap-3">
                   <Button href="/ai?task=appointment" variant="coral" className="text-[14px]">
-                    Prepare Question List with AI →
+                    Prepare Questions for Visit →
                   </Button>
                   <Button href="/reports" variant="ghost" className="text-forest text-[14px]">
                     View Decoded Reports

@@ -57,15 +57,14 @@ export function AIPreview() {
       <div className="container-page">
         <Reveal>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="label text-teal">Task-Oriented Intelligence</span>
-            <span className="text-[12px] text-warm-gray">• Clinical Educational Support</span>
+            <span className="label text-teal">Clinical Assistant</span>
+            <span className="text-[12px] text-warm-gray">• Decision Support</span>
           </div>
-          <h2 className="editorial-serif mt-4 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
-            Guided intelligence.
-            <span className="block italic font-serif">Built for specific clinical tasks.</span>
+          <h2 className="editorial-serif mt-3 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
+            Clear answers to difficult questions.
           </h2>
-          <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-blue-gray">
-            Rather than an open-ended chatbot, ONCO-AID provides structured entry points to help you decode reports, prepare for visits, and understand your care pathway.
+          <p className="mt-3 max-w-2xl text-[17px] leading-relaxed text-blue-gray">
+            Understand medical terms, prepare questions for your care team, and make sense of your next steps.
           </p>
         </Reveal>
 
@@ -136,7 +135,7 @@ export function AIPreview() {
                   {selectedTask.buttonLabel}
                 </Button>
                 <Button href="/ai" variant="ghost" className="text-forest text-[14px]">
-                  Open Full AI Assistant
+                  Talk to ONCO-AID
                 </Button>
               </div>
             </div>
@@ -145,11 +144,11 @@ export function AIPreview() {
             <div className="rounded-[24px] bg-forest p-6 sm:p-8 text-white-soft">
               <span className="label text-mint">Clinical Safety & Restraint</span>
               <h4 className="editorial-serif mt-3 text-[1.8rem]">Educational Companion</h4>
-              <p className="mt-3 text-[14px] leading-relaxed text-white-soft/75">
-                ONCO-AID AI is engineered strictly as an educational decision-support tool. It never claims to diagnose cancer, predict prognosis, or prescribe medications.
+              <p className="mt-3 text-[14px] leading-relaxed text-white-soft/80">
+                ONCO-AID is engineered strictly as an educational decision-support tool. It never claims to diagnose cancer, predict prognosis, or prescribe medications.
               </p>
               <div className="mt-6 rounded-xl border border-white-soft/15 bg-white-soft/8 p-3.5 text-[12px] text-white-soft/80">
-                🔒 Private & secure: Clinical questions are processed server-side with zero data harvesting.
+                Private & secure: Clinical questions are processed server-side with zero data harvesting.
               </div>
             </div>
           </div>

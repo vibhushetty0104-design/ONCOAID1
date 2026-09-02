@@ -10,13 +10,12 @@ export function ResourcesPreview() {
     <section className="bg-ivory py-24 md:py-32">
       <div className="container-page">
         <Reveal>
-          <p className="label text-teal">The ONCO-AID Editorial Journal</p>
-          <h2 className="editorial-serif mt-4 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
-            Useful knowledge.
-            <span className="block italic">Without the overwhelm.</span>
+          <p className="label text-teal">Patient Resources</p>
+          <h2 className="editorial-serif mt-3 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
+            Information you can use.
           </h2>
-          <p className="mt-2 text-[14px] text-warm-gray">
-            Evidence-based guides, patient journeys, and financial navigation in Indian healthcare.
+          <p className="mt-3 text-[16px] text-blue-gray max-w-2xl">
+            Clear explanations, practical guides and resources for navigating cancer care in India.
           </p>
         </Reveal>
 

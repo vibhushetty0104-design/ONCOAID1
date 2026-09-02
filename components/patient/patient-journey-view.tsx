@@ -136,8 +136,8 @@ export function PatientJourneyView() {
 
           {/* Next Steps for this Stage */}
           <div className="mt-6 rounded-2xl bg-ivory p-5 border border-forest/8">
-            <h4 className="text-[13px] font-bold uppercase tracking-wider text-forest flex items-center gap-2">
-              <span className="text-coral text-[16px]">✦</span> What You May Need Next
+            <h4 className="text-[12.5px] font-bold uppercase tracking-wider text-forest">
+              What You May Need Next
             </h4>
             <ul className="mt-3 space-y-2 text-[14.5px] text-ink/85">
               {selectedStage.nextSteps.map((step, sIdx) => (
@@ -151,8 +151,8 @@ export function PatientJourneyView() {
 
           {/* Questions to Ask Care Team */}
           <div className="mt-6 rounded-2xl bg-forest/5 p-5 border border-forest/10">
-            <h4 className="text-[13px] font-bold uppercase tracking-wider text-teal flex items-center gap-2">
-              <span className="text-teal text-[16px]">💬</span> Questions to Ask Your Oncology Team
+            <h4 className="text-[12.5px] font-bold uppercase tracking-wider text-teal">
+              Questions to Ask Your Oncology Team
             </h4>
             <ul className="mt-3 space-y-2.5 text-[14.5px] text-ink/85 italic">
               {selectedStage.questionsForDoctor.map((q, qIdx) => (
@@ -169,13 +169,13 @@ export function PatientJourneyView() {
               href="/reports"
               className="rounded-full bg-forest px-5 py-2.5 text-[13.5px] font-medium text-white-soft hover:bg-forest-mid transition-colors"
             >
-              Decode Pathology Reports →
+              Understand Pathology Reports →
             </Link>
             <Link
               href="/ai?task=appointment"
               className="rounded-full border border-forest/20 bg-ivory px-5 py-2.5 text-[13.5px] font-medium text-forest hover:bg-mint/40 transition-colors"
             >
-              Ask AI for Visit Prep
+              Prepare for Consultation
             </Link>
           </div>
         </div>
@@ -195,7 +195,7 @@ export function PatientJourneyView() {
                     key={dIdx}
                     className="flex items-center justify-between rounded-xl bg-ivory p-3 text-[13.5px] border border-forest/5"
                   >
-                    <span className="font-medium text-forest">📄 {doc}</span>
+                    <span className="font-medium text-forest">{doc}</span>
                     <span className="text-[12px] text-emerald-700 font-semibold">On File</span>
                   </div>
                 ))}

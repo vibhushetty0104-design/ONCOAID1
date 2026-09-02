@@ -85,19 +85,19 @@ export default function PatientDashboardPage() {
             <div className="mt-6 border-t border-forest/8 pt-5">
               <div className="grid grid-cols-4 gap-2 text-center text-[12px]">
                 <div className="rounded-xl bg-emerald-50 p-2.5 border border-emerald-500/20 text-emerald-900">
-                  <span className="font-bold block">✓ 01. Consult</span>
+                  <span className="font-bold block">01. Consult</span>
                   <p className="text-[11px] text-emerald-800 font-semibold">Done</p>
                 </div>
                 <div className="rounded-xl bg-emerald-50 p-2.5 border border-emerald-500/20 text-emerald-900">
-                  <span className="font-bold block">✓ 02. Biopsy</span>
+                  <span className="font-bold block">02. Biopsy</span>
                   <p className="text-[11px] text-emerald-800 font-semibold">Done</p>
                 </div>
                 <div className="rounded-xl bg-forest text-white-soft p-2.5 shadow-sm">
-                  <span className="font-bold block">● 03. Pathology</span>
+                  <span className="font-bold block">03. Pathology</span>
                   <p className="text-[11px] text-mint font-semibold">Current</p>
                 </div>
                 <div className="rounded-xl bg-ivory p-2.5 border border-forest/8 text-forest/70">
-                  <span className="font-medium block">○ 04. Staging</span>
+                  <span className="font-medium block">04. Staging</span>
                   <p className="text-[11px] text-warm-gray font-semibold">Next</p>
                 </div>
               </div>
@@ -148,18 +148,18 @@ export default function PatientDashboardPage() {
                 <p className="text-[13.5px] font-medium text-warm-gray">{nextAppointment.specialty}</p>
               </div>
               <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[12px] font-semibold text-emerald-800">
-                ● {nextAppointment.status}
+                {nextAppointment.status}
               </span>
             </div>
 
             <div className="mt-5 grid gap-4 rounded-2xl bg-ivory p-4 text-[14px] sm:grid-cols-2">
               <div>
                 <span className="text-[11px] font-bold uppercase tracking-wider text-warm-gray block">Date & Time</span>
-                <p className="font-semibold text-forest mt-0.5">📅 {nextAppointment.date} at {nextAppointment.time}</p>
+                <p className="font-semibold text-forest mt-0.5">{nextAppointment.date} at {nextAppointment.time}</p>
               </div>
               <div>
                 <span className="text-[11px] font-bold uppercase tracking-wider text-warm-gray block">Hospital & Location</span>
-                <p className="font-semibold text-forest mt-0.5">🏥 {nextAppointment.hospital}</p>
+                <p className="font-semibold text-forest mt-0.5">{nextAppointment.hospital}</p>
               </div>
             </div>
 
@@ -184,21 +184,21 @@ export default function PatientDashboardPage() {
 
             <div className="mt-4 divide-y divide-forest/8">
               <div className="py-3 flex items-start gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mint/50 text-forest font-bold text-[12px]">📄</span>
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-mint/60 text-forest font-bold text-[11px]">01</span>
                 <div>
                   <p className="text-[14px] font-semibold text-forest">Left Breast Tissue Core Biopsy report decoded</p>
                   <p className="text-[12px] text-warm-gray">14 Aug 2026 · Biomarkers identified as ER+ (90%), PR+ (80%), HER2- (1+)</p>
                 </div>
               </div>
               <div className="py-3 flex items-start gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-coral/20 text-coral font-bold text-[12px]">📅</span>
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-coral/20 text-coral font-bold text-[11px]">02</span>
                 <div>
                   <p className="text-[14px] font-semibold text-forest">Consultation scheduled with Dr. Ananya Rao</p>
                   <p className="text-[12px] text-warm-gray">16 Aug 2026 · Confirmed for 28 Aug at Manipal Hospital, Bengaluru</p>
                 </div>
               </div>
               <div className="py-3 flex items-start gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal/20 text-teal font-bold text-[12px]">💬</span>
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal/20 text-teal font-bold text-[11px]">03</span>
                 <div>
                   <p className="text-[14px] font-semibold text-forest">Prepared 3 questions for upcoming medical oncology visit</p>
                   <p className="text-[12px] text-warm-gray">Saved to personal appointment briefing sheet</p>
@@ -220,40 +220,28 @@ export default function PatientDashboardPage() {
                 href="/reports"
                 className="group flex items-center justify-between rounded-2xl bg-ivory p-3.5 text-[14px] font-medium text-forest hover:bg-mint/40 transition-colors border border-forest/5"
               >
-                <div className="flex items-center gap-2.5">
-                  <span>📄</span>
-                  <span>Understand a Report</span>
-                </div>
+                <span>Understand a Report</span>
                 <span className="text-teal group-hover:translate-x-0.5 transition-transform">→</span>
               </Link>
               <Link
                 href="/ai?task=appointment"
                 className="group flex items-center justify-between rounded-2xl bg-ivory p-3.5 text-[14px] font-medium text-forest hover:bg-mint/40 transition-colors border border-forest/5"
               >
-                <div className="flex items-center gap-2.5">
-                  <span>📝</span>
-                  <span>Prepare for Appointment</span>
-                </div>
+                <span>Prepare for Appointment</span>
                 <span className="text-teal group-hover:translate-x-0.5 transition-transform">→</span>
               </Link>
               <Link
                 href="/ai"
                 className="group flex items-center justify-between rounded-2xl bg-ivory p-3.5 text-[14px] font-medium text-forest hover:bg-mint/40 transition-colors border border-forest/5"
               >
-                <div className="flex items-center gap-2.5">
-                  <span>🤖</span>
-                  <span>Ask ONCO-AID AI</span>
-                </div>
+                <span>Talk to ONCO-AID</span>
                 <span className="text-teal group-hover:translate-x-0.5 transition-transform">→</span>
               </Link>
               <Link
                 href="/specialists"
                 className="group flex items-center justify-between rounded-2xl bg-ivory p-3.5 text-[14px] font-medium text-forest hover:bg-mint/40 transition-colors border border-forest/5"
               >
-                <div className="flex items-center gap-2.5">
-                  <span>🏥</span>
-                  <span>Find Indian Specialists</span>
-                </div>
+                <span>Find Specialists</span>
                 <span className="text-teal group-hover:translate-x-0.5 transition-transform">→</span>
               </Link>
             </div>

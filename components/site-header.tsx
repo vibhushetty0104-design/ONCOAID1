@@ -108,17 +108,17 @@ export function SiteHeader() {
 
           {/* Primary Action Buttons */}
           <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Core Action: Ask ONCO-AID */}
+            {/* Core Action: Talk to ONCO-AID */}
             <Link
               href="/ai"
-              className={`hidden items-center gap-1.5 rounded-full px-4 py-1.5 text-[12.5px] font-semibold uppercase tracking-wider transition-all sm:inline-flex ${
+              className={`hidden items-center gap-1.5 rounded-full px-4 py-1.5 text-[12.5px] font-semibold tracking-wide transition-all sm:inline-flex ${
                 darkHero
                   ? "border border-cyan/40 bg-cyan/15 text-cyan hover:bg-cyan/25"
                   : "border border-forest/20 bg-forest/8 text-forest hover:bg-forest/15 font-bold"
               }`}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
-              Ask AI
+              Talk to ONCO-AID
             </Link>
 
             {/* Find Care Button */}
@@ -223,7 +223,7 @@ export function SiteHeader() {
                 className="flex w-full items-center justify-center gap-2 rounded-2xl border border-cyan/40 bg-cyan/15 py-3.5 text-[15px] font-semibold text-cyan"
               >
                 <span className="h-2 w-2 rounded-full bg-cyan animate-pulse" />
-                Ask ONCO-AID Assistant →
+                Talk to ONCO-AID →
               </Link>
               <Button
                 href="/appointments"

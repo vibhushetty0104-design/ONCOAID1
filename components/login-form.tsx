@@ -123,10 +123,9 @@ export function LoginForm() {
             <button
               type="button"
               onClick={handleDemoLogin}
-              className="w-full rounded-2xl border border-coral/30 bg-coral/10 py-3 text-[13.5px] font-bold text-coral-deep hover:bg-coral/20 transition-all flex items-center justify-center gap-2"
+              className="w-full rounded-2xl border border-coral/30 bg-coral/10 py-3 text-[13.5px] font-bold text-coral-deep hover:bg-coral/20 transition-all flex items-center justify-center"
             >
-              <span>⚡</span>
-              <span>Demo Quick Sign-In (Patient Arjun Mehta)</span>
+              Sign In as Demo Patient (Arjun Mehta)
             </button>
           </div>
 
@@ -211,7 +210,7 @@ export function LoginForm() {
           </p>
           {resetSent && (
             <div className="rounded-xl bg-emerald-50 border border-emerald-500/30 p-3 text-[13px] text-emerald-800 font-medium">
-              ✓ Password reset link sent to your email.
+              Password reset link sent to your email.
             </div>
           )}
           <div>
@@ -233,7 +232,7 @@ export function LoginForm() {
       )}
 
       <p className="mt-6 text-center text-[12px] leading-relaxed text-warm-gray">
-        🔒 Patient privacy is strictly protected under Indian Digital Personal Data Protection (DPDP) and DISHA guidelines.
+        Patient privacy is strictly protected under Indian Digital Personal Data Protection (DPDP) and DISHA guidelines.
       </p>
     </div>
   );

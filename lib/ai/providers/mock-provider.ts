@@ -26,7 +26,7 @@ export class MockAIProvider implements AIProvider {
 
     switch (category) {
       case "report_decode":
-        message = `### 📋 Pathology & Biomarker Analysis
+        message = `### Pathology & Biomarker Analysis
 
 Here is a structured, plain-language translation of key elements from your report:
 
@@ -37,7 +37,7 @@ Here is a structured, plain-language translation of key elements from your repor
   - **N (Nodes):** Status of regional lymph nodes (N0 indicates no microscopic nodal spread detected in sampled nodes).
   - **M (Metastasis):** Indicates absence (M0) or presence (M1) of spread to distant organs.
 
-#### 💡 Questions to ask your Oncology Team:
+#### Questions to ask your oncology team:
 1. *"Which specific biomarker and immunohistochemistry (IHC) results are final, and are any molecular or FISH tests still pending?"*
 2. *"Based on my receptor profile, what sequence do you recommend between surgery first versus systemic treatment first?"*
 3. *"Do you recommend a whole-body baseline staging scan (such as PET-CT) before we finalize the treatment plan?"*`;
@@ -53,7 +53,7 @@ Here is a structured, plain-language translation of key elements from your repor
         break;
 
       case "appointment_prep":
-        message = `### 📝 Preparing for Your Oncology Consultation
+        message = `### Preparing for Your Oncology Consultation
 
 Entering a specialist consultation with a structured checklist helps you stay grounded, ask the right questions, and retain critical details.
 
@@ -82,7 +82,7 @@ Entering a specialist consultation with a structured checklist helps you stay gr
         break;
 
       case "journey_understanding":
-        message = `### 🔬 Understanding Treatment Modalities & Sequences
+        message = `### Understanding Treatment Modalities & Sequences
 
 Modern cancer care often combines multiple therapies tailored to your tumor biology and staging:
 
@@ -91,7 +91,7 @@ Modern cancer care often combines multiple therapies tailored to your tumor biol
 - **Radiation Oncology:** Delivers high-precision energy beams (e.g., IMRT, IGRT, CyberKnife, or Proton Beam) directly to the tumor site to neutralize residual cells while sparing adjacent organs.
 - **Multidisciplinary Sequence:** In some cases, chemotherapy is given **before surgery** (neoadjuvant) to shrink the tumor, or **after surgery** (adjuvant) to reduce the likelihood of recurrence.
 
-#### 💡 Discussion Prompt for Your Care Team:
+#### Discussion prompts for your care team:
 *"In what exact sequence will these treatments be administered, and why is this order optimal for my specific tumor biology?"*`;
 
         doctorQuestions.push(
@@ -105,7 +105,7 @@ Modern cancer care often combines multiple therapies tailored to your tumor biol
         break;
 
       case "financial_navigation":
-        message = `### 💳 Navigating Health Insurance & Cancer Care in India
+        message = `### Navigating Health Insurance & Cancer Care in India
 
 Understanding billing, pre-authorization, and government coverage early helps prevent unexpected financial stress:
 
@@ -114,7 +114,7 @@ Understanding billing, pre-authorization, and government coverage early helps pr
 - **Ayushman Bharat (PM-JAY) & State Schemes:** Government schemes provide substantial financial coverage for surgical and medical oncology packages at empaneled tertiary hospitals.
 - **Discharge Summaries & Bills:** Always retain original pharmacy receipts, chemo vial barcodes, and itemized bill summaries for claim settlements.
 
-#### 💡 Questions for the Hospital TPA Desk:
+#### Questions for the Hospital TPA Desk:
 1. *"Is my health insurance provider empanelled for direct cashless claims at this facility?"*
 2. *"Does the package estimate include supportive medications, anti-emetics, and post-chemo blood tests?"*`;
 
@@ -129,7 +129,7 @@ Understanding billing, pre-authorization, and government coverage early helps pr
         break;
 
       case "specialist_matching":
-        message = `### 🏥 Finding the Right Oncology Specialist
+        message = `### Finding the Right Oncology Specialist
 
 Selecting the appropriate subspecialist ensures your treatment aligns with international clinical guidelines:
 
@@ -151,7 +151,7 @@ Selecting the appropriate subspecialist ensures your treatment aligns with inter
         break;
 
       default:
-        message = `### 🤝 ONCO-AID Educational Guide
+        message = `### Clinical Guidance
 
 Thank you for your question: **"${request.prompt}"**
 

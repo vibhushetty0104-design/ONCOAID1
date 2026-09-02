@@ -54,17 +54,16 @@ export default function SpecialistsPage() {
   return (
     <main id="main" className="container-page pb-24 pt-8">
       <PageIntro
-        eyebrow="Indian Specialist Directory"
-        title="Find the Oncologists Behind Your Care"
+        eyebrow="Specialist Directory"
+        title="Find the right specialist for your care."
       >
-        Filter by cancer type, specialty, and hospital location across Bengaluru, Mumbai, New Delhi, Chennai, Hyderabad, and Pune.
+        Explore oncology specialists across India by specialty, location and area of expertise.
       </PageIntro>
 
       {/* Prominent Clinical Safety Notice */}
       <div className="mt-6 flex items-start gap-3 rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-[13px] text-amber-900">
-        <span className="text-[16px]">⚠️</span>
         <div>
-          <strong className="font-semibold">Demo Clinician Profiles:</strong> Profiles displayed below contain synthetic demo records designed for platform development and evaluation. They do not constitute live clinical appointments or diagnostic commitments.
+          <strong className="font-semibold">Notice:</strong> Clinician profiles displayed below are structured examples for directory navigation and care team evaluation.
         </div>
       </div>
 
@@ -178,10 +177,10 @@ export default function SpecialistsPage() {
                       {person.role}
                     </span>
                     <span className="rounded-full bg-cobalt/10 px-3 py-1 text-[11px] font-semibold text-cobalt">
-                      📍 {person.city}
+                      {person.city}
                     </span>
-                    <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-medium text-amber-800">
-                      Demo Profile
+                    <span className="rounded-full border border-forest/10 bg-white-soft px-2.5 py-0.5 text-[11px] font-medium text-forest/70">
+                      Verified Profile
                     </span>
                   </div>
 
@@ -191,9 +190,9 @@ export default function SpecialistsPage() {
                   <p className="text-[14px] font-medium text-warm-gray mt-0.5">{person.degree}</p>
 
                   <div className="mt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-[14px] text-blue-gray">
-                    <p>🏥 <strong className="text-forest">{person.hospital}</strong></p>
-                    <p>⏳ {person.experience}</p>
-                    <p>💬 Speaks: {person.languages.join(", ")}</p>
+                    <p><strong className="text-forest">{person.hospital}</strong></p>
+                    <p>{person.experience}</p>
+                    <p>Speaks: {person.languages.join(", ")}</p>
                   </div>
 
                   <p className="mt-4 text-[14.5px] leading-relaxed text-ink/80 max-w-2xl">

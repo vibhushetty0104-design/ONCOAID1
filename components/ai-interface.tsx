@@ -66,9 +66,9 @@ export function AIInterface() {
       id: "init-1",
       role: "assistant",
       content:
-        "Welcome to **ONCO-AID Clinical Assistant**.\n\nI am an educational guide built to help you decode pathology reports, structure questions for your oncology team, and understand treatment steps in calm, plain language.\n\nChoose an active task above or type your clinical question below.",
+        "Welcome to **ONCO-AID Clinical Assistant**.\n\nI am an educational guide built to help you understand pathology terminology, structure questions for your oncology team, and make sense of your care steps in clear, plain language.\n\nSelect a clinical focus area above or enter your question below.",
       timestamp: "Just now",
-      provider: "ONCO-AID Clinical Intelligence",
+      provider: "ONCO-AID Clinical Assistant",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -178,23 +178,23 @@ export function AIInterface() {
       {/* Top Header with Clinical Status */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white-soft/10 pb-5">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] font-bold uppercase tracking-[0.16em] text-mint">
-              ONCO-AID / Task-Oriented Intelligence
-            </span>
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-[17px] font-semibold text-white-soft">
+              ONCO-AID Clinical Assistant
+            </h2>
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Online
+              Active
             </span>
           </div>
-          <p className="mt-1 text-[13px] text-white-soft/70">
-            Select a clinical task below to generate tailored educational guidance.
+          <p className="mt-1 text-[13.5px] text-white-soft/75">
+            Understand medical terms, prepare questions for your care team, and make sense of your next steps.
           </p>
         </div>
 
         {/* Clinical Safety Disclaimer Badge */}
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-[12px] text-amber-200">
-          ⚠️ Non-diagnostic · Educational guidance only
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-[12px] text-amber-200 font-medium">
+          Notice: Educational guidance only · Non-diagnostic
         </div>
       </div>
 
@@ -257,8 +257,8 @@ export function AIInterface() {
               </span>
               <span className="text-[11px] text-white-soft/35">• {msg.timestamp}</span>
               {msg.cached && (
-                <span className="text-[10px] text-cyan/75 rounded bg-cyan/10 px-1 py-0.2">
-                  ⚡ Cached
+                <span className="text-[10px] text-cyan/75 rounded bg-cyan/10 px-1.5 py-0.5 uppercase tracking-wider font-semibold">
+                  Cached
                 </span>
               )}
             </div>
@@ -302,7 +302,7 @@ export function AIInterface() {
                     onClick={() => handleCopy(msg.id, msg.content)}
                     className="text-mint hover:underline font-medium"
                   >
-                    {copiedId === msg.id ? "✓ Copied to clipboard" : "Copy note"}
+                    {copiedId === msg.id ? "Copied to clipboard" : "Copy note"}
                   </button>
                 </div>
               )}
