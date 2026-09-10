@@ -184,10 +184,10 @@ export function SiteHeader() {
               >
                 <div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-mint block">
-                    Patient Command Center
+                    Patient Command Center · Demo
                   </span>
                   <span className="font-serif text-[20px] text-white-soft font-medium">
-                    Arjun Mehta&apos;s Care Dashboard
+                    Demo Patient Care Dashboard
                   </span>
                 </div>
                 <span className="text-mint text-[18px]">→</span>

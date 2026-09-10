@@ -3,21 +3,22 @@ import { Reveal } from "@/components/reveal";
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-indigo py-28 text-white-soft md:py-36">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(47,91,255,0.18),transparent_36%),radial-gradient(circle_at_10%_80%,rgba(127,212,208,0.12),transparent_40%)]" />
-      <div className="container-page relative">
+    <section className="relative overflow-hidden bg-forest py-28 text-white-soft md:py-36">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(127,212,208,0.12),transparent_40%),radial-gradient(circle_at_15%_80%,rgba(215,236,227,0.08),transparent_50%)]" />
+      <div className="container-page relative z-10">
         <Reveal>
-          <h2 className="editorial-serif max-w-3xl text-[clamp(2.4rem,6vw,5.2rem)]">
+          <p className="label text-mint block mb-3">Cancer Care · India</p>
+          <h2 className="editorial-serif max-w-3xl text-[clamp(2.4rem,6vw,5.2rem)] text-white-soft leading-[1.04]">
             You don&apos;t have to navigate it alone.
           </h2>
-          <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white-soft/80">
+          <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white-soft/85">
             Start by finding a specialist, understanding your report, or preparing questions for your next oncology visit.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Button href="/specialists" variant="coral" className="px-6 py-3.5 text-[14.5px] font-semibold">
               Find a Specialist
             </Button>
-            <Button href="/ai" variant="ghost" className="border border-white-soft/20 text-white-soft px-6 py-3.5 text-[14.5px]">
+            <Button href="/ai" variant="ghost" className="border border-white-soft/20 text-white-soft hover:bg-white-soft/10 px-6 py-3.5 text-[14.5px]">
               Talk to ONCO-AID
             </Button>
           </div>

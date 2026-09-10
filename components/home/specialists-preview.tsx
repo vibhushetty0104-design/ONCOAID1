@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 
 const tones = [
   "from-[#1a3f3c] to-[#082828]",
-  "from-[#14162e] to-[#163f3c]",
-  "from-[#0f3a38] to-[#1b2c3a]",
-  "from-[#163f3c] to-[#2a1f38]",
+  "from-[#0f3a38] to-[#163f3c]",
+  "from-[#082828] to-[#1b2c3a]",
+  "from-[#163f3c] to-[#1e3432]",
 ];
 
 export function SpecialistsPreview() {
@@ -40,12 +40,12 @@ export function SpecialistsPreview() {
             className="group relative min-h-[440px] overflow-hidden rounded-[32px] bg-forest text-white-soft shadow-xl transition-all duration-320 hover:shadow-2xl"
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${tones[0]} transition-transform duration-[680ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]`} />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(215,236,227,0.18),transparent_42%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(215,236,227,0.14),transparent_45%)]" />
             <div className="relative flex h-full min-h-[440px] flex-col justify-between p-8 md:p-10">
               <div className="flex items-center justify-between">
                 <span className="label text-mint">{featured.role}</span>
-                <span className="rounded-full bg-white-soft/10 px-3 py-1 text-[12px] text-mint">
-                  {featured.city}
+                <span className="rounded-full bg-white-soft/10 px-3 py-1 text-[11px] text-mint">
+                  Demo Profile · {featured.city}
                 </span>
               </div>
 
@@ -56,7 +56,7 @@ export function SpecialistsPreview() {
                 <h3 className="editorial-serif mt-2 text-[3rem] leading-none">{featured.name}</h3>
                 <p className="mt-3 text-[14.5px] text-white-soft/90 font-medium">{featured.hospital}</p>
                 <p className="mt-4 max-w-md text-white-soft/88 text-[14px] leading-relaxed line-clamp-2">{featured.focus}</p>
-                <div className="mt-6 flex items-center gap-2 text-[14px] font-semibold text-cyan group-hover:translate-x-1 transition-transform">
+                <div className="mt-6 flex items-center gap-2 text-[14px] font-semibold text-mint group-hover:translate-x-1 transition-transform">
                   <span>Read Profile & Consult</span>
                   <span>→</span>
                 </div>
@@ -69,7 +69,7 @@ export function SpecialistsPreview() {
               <Link
                 key={person.id}
                 href={`/specialists/${person.id}`}
-                className="group grid grid-cols-[80px_1fr] gap-4 rounded-[24px] border border-forest/8 bg-ivory p-4 transition-all duration-320 hover:-translate-y-0.5 hover:border-cobalt/30 hover:shadow-md"
+                className="group grid grid-cols-[80px_1fr] gap-4 rounded-[24px] border border-forest/8 bg-ivory p-4 transition-all duration-320 hover:-translate-y-0.5 hover:border-forest/25 hover:shadow-md"
               >
                 <div className={`h-20 rounded-[18px] bg-gradient-to-br ${tones[index + 1]} flex items-center justify-center font-bold text-white-soft text-[20px]`}>
                   {person.name.split(" ").map(n => n[0]).join("")}
@@ -79,7 +79,7 @@ export function SpecialistsPreview() {
                     <span className="text-[12px] font-semibold text-teal uppercase tracking-wider">{person.role}</span>
                     <span className="text-[12px] text-warm-gray">• {person.city}</span>
                   </div>
-                  <h3 className="text-[20px] font-medium tracking-tight text-forest group-hover:text-cobalt transition-colors">
+                  <h3 className="text-[20px] font-medium tracking-tight text-forest group-hover:text-teal transition-colors">
                     {person.name}
                   </h3>
                   <p className="text-[13px] text-blue-gray line-clamp-1">{person.hospital}</p>

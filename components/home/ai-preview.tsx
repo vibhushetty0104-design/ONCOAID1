@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
 
@@ -50,7 +49,6 @@ const aiTasks = [
 
 export function AIPreview() {
   const [selectedTask, setSelectedTask] = useState(aiTasks[0]);
-  const [quickInput, setQuickInput] = useState("");
 
   return (
     <section className="bg-ivory py-24 md:py-32">
@@ -78,12 +76,11 @@ export function AIPreview() {
                 type="button"
                 onClick={() => {
                   setSelectedTask(task);
-                  setQuickInput(task.examplePrompt);
                 }}
                 className={`flex flex-col justify-between rounded-[28px] border p-6 text-left transition-all duration-300 ${
                   isSelected
-                    ? "border-cobalt bg-white-soft shadow-[var(--shadow-card)] scale-[1.02]"
-                    : "border-forest/8 bg-white-soft/60 hover:border-forest/20 hover:bg-white-soft"
+                    ? "border-forest bg-white-soft shadow-[var(--shadow-card)] scale-[1.01]"
+                    : "border-forest/10 bg-white-soft/60 hover:border-forest/20 hover:bg-white-soft"
                 }`}
               >
                 <div>
@@ -112,7 +109,7 @@ export function AIPreview() {
         <div className="mt-8 overflow-hidden rounded-[32px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)] md:p-10">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-center">
             <div>
-              <span className="label text-cobalt">Active Clinical Task</span>
+              <span className="label text-teal">Active Clinical Task</span>
               <h3 className="editorial-serif mt-2 text-[2.4rem] text-forest">
                 {selectedTask.title}
               </h3>
@@ -121,7 +118,7 @@ export function AIPreview() {
               </p>
 
               {/* Sample Prompt Pill */}
-              <div className="mt-6 rounded-2xl bg-ivory p-4 border border-forest/5">
+              <div className="mt-6 rounded-2xl bg-ivory p-4 border border-forest/8">
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-warm-gray block">
                   Suggested Task Query:
                 </span>

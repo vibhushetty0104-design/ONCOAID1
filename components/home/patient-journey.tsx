@@ -32,7 +32,7 @@ const icons: Record<string, React.ReactNode> = {
 };
 
 export function PatientJourney() {
-  const [active, setActive] = useState<(typeof pathways)[number]["slug"]>(pathways[1].slug);
+  const [active, setActive] = useState<string>(pathways[1].slug);
   const reduce = useReducedMotion();
   const selected = pathways.find((p) => p.slug === active) ?? pathways[0];
 
@@ -49,7 +49,74 @@ export function PatientJourney() {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,380px)]">
+        {/* Mobile View: Inline Accordion/Disclosure (Zero Layout Displacement) */}
+        <div className="mt-10 flex flex-col lg:hidden space-y-3">
+          {pathways.map((item) => {
+            const isExpanded = item.slug === active;
+            return (
+              <div
+                key={item.slug}
+                className={`overflow-hidden rounded-2xl border transition-colors ${
+                  isExpanded
+                    ? "border-forest/20 bg-white-soft shadow-sm"
+                    : "border-forest/10 bg-white-soft/60"
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setActive(isExpanded ? "" : item.slug)}
+                  aria-expanded={isExpanded}
+                  className="flex w-full items-center justify-between p-4 text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-[12px] font-bold text-coral">{item.number}</span>
+                    <span className="text-forest/70">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        {icons[item.slug]}
+                      </svg>
+                    </span>
+                    <span className="font-serif text-[19px] font-medium text-forest">
+                      {item.title}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-forest/60 transition-transform duration-200 ${
+                      isExpanded ? "rotate-90 text-coral font-bold" : ""
+                    }`}
+                  >
+                    →
+                  </span>
+                </button>
+
+                {/* Inline Expanded Details */}
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      key="content"
+                      initial={reduce ? false : { height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={reduce ? undefined : { height: 0, opacity: 0 }}
+                      transition={{ duration: motionTokens.normal, ease: motionTokens.easeOutSoft }}
+                      className="border-t border-forest/8 px-4 pb-5 pt-3"
+                    >
+                      <p className="text-[14.5px] leading-relaxed text-blue-gray">
+                        {item.description}
+                      </p>
+                      <div className="mt-4">
+                        <Button href={item.href} variant="primary" className="py-2 px-4 text-[13.5px]">
+                          Enter this pathway →
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop View: Interactive Split-View Grid */}
+        <div className="mt-14 hidden lg:grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,380px)]">
           <ul className="flex flex-col">
             {pathways.map((item) => {
               const isActive = item.slug === active;
@@ -59,7 +126,7 @@ export function PatientJourney() {
                     type="button"
                     onClick={() => setActive(item.slug)}
                     onMouseEnter={() => setActive(item.slug)}
-                    className={`pathway-row group flex w-full items-start gap-5 border-t border-forest/10 px-2 py-5 text-left ${
+                    className={`pathway-row group flex w-full items-start gap-5 border-t border-forest/10 px-2 py-5 text-left transition-colors duration-200 ${
                       isActive ? "bg-white-soft/70" : "bg-transparent"
                     }`}
                     aria-pressed={isActive}
@@ -82,7 +149,11 @@ export function PatientJourney() {
                         {item.description}
                       </span>
                     </span>
-                    <span className={`pathway-arrow mt-2 transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${isActive ? "text-coral font-bold" : "text-forest/60"}`}>
+                    <span
+                      className={`pathway-arrow mt-2 transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        isActive ? "text-coral font-bold translate-x-1" : "text-forest/60"
+                      }`}
+                    >
                       →
                     </span>
                   </button>
@@ -102,8 +173,12 @@ export function PatientJourney() {
             >
               <div>
                 <p className="label text-coral">{selected.number}</p>
-                <h3 className="editorial-serif mt-4 text-[2.2rem] leading-none text-forest">{selected.title}</h3>
-                <p className="mt-5 text-[16px] leading-relaxed text-blue-gray">{selected.description}</p>
+                <h3 className="editorial-serif mt-4 text-[2.2rem] leading-none text-forest">
+                  {selected.title}
+                </h3>
+                <p className="mt-5 text-[16px] leading-relaxed text-blue-gray">
+                  {selected.description}
+                </p>
               </div>
               <Button href={selected.href} className="mt-8 self-start">
                 Enter this pathway →

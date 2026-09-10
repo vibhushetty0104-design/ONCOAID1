@@ -60,10 +60,10 @@ export default function SpecialistsPage() {
         Explore oncology specialists across India by specialty, location and area of expertise.
       </PageIntro>
 
-      {/* Prominent Clinical Safety Notice */}
+      {/* Prominent Demonstration Data Transparency Notice */}
       <div className="mt-6 flex items-start gap-3 rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-[13px] text-amber-900">
         <div>
-          <strong className="font-semibold">Notice:</strong> Clinician profiles displayed below are structured examples for directory navigation and care team evaluation.
+          <strong className="font-semibold">Demo Notice:</strong> Clinician profiles displayed below are demonstration examples illustrating specialty matching and directory evaluation.
         </div>
       </div>
 
@@ -80,7 +80,7 @@ export default function SpecialistsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="e.g. Dr. Rao, Manipal..."
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-cobalt focus:ring-2 focus:ring-cobalt/20"
+              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
             />
           </div>
 
@@ -92,7 +92,7 @@ export default function SpecialistsPage() {
             <select
               value={selectedCancer}
               onChange={(e) => setSelectedCancer(e.target.value)}
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-cobalt focus:ring-2 focus:ring-cobalt/20"
+              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
             >
               {cancerFilterOptions.map((c) => (
                 <option key={c} value={c}>
@@ -110,7 +110,7 @@ export default function SpecialistsPage() {
             <select
               value={selectedSpecialty}
               onChange={(e) => setSelectedSpecialty(e.target.value)}
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-cobalt focus:ring-2 focus:ring-cobalt/20"
+              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
             >
               <option value="All Specialties">All Specialties</option>
               {specialties.map((spec) => (
@@ -129,7 +129,7 @@ export default function SpecialistsPage() {
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-cobalt focus:ring-2 focus:ring-cobalt/20"
+              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
             >
               {indianCities.map((city) => (
                 <option key={city} value={city}>
@@ -155,7 +155,7 @@ export default function SpecialistsPage() {
               setSelectedSpecialty("All Specialties");
               setSelectedCancer("All Cancers");
             }}
-            className="text-cobalt hover:underline text-[13px]"
+            className="text-teal hover:underline text-[13px] font-medium"
           >
             Reset all filters
           </button>
@@ -168,7 +168,7 @@ export default function SpecialistsPage() {
           filteredSpecialists.map((person) => (
             <div
               key={person.id}
-              className="group relative overflow-hidden rounded-[28px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)] transition-all duration-320 hover:border-cobalt/40 hover:shadow-lg md:p-8"
+              className="group relative overflow-hidden rounded-[28px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)] transition-all duration-320 hover:border-forest/30 hover:shadow-lg md:p-8"
             >
               <div className="grid gap-6 md:grid-cols-[1fr_260px] items-center">
                 <div>
@@ -176,15 +176,15 @@ export default function SpecialistsPage() {
                     <span className="rounded-full bg-forest/8 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-forest">
                       {person.role}
                     </span>
-                    <span className="rounded-full bg-cobalt/10 px-3 py-1 text-[11px] font-semibold text-cobalt">
+                    <span className="rounded-full bg-forest/6 px-3 py-1 text-[11px] font-semibold text-teal">
                       {person.city}
                     </span>
-                    <span className="rounded-full border border-forest/10 bg-white-soft px-2.5 py-0.5 text-[11px] font-medium text-forest/70">
-                      Verified Profile
+                    <span className="rounded-full border border-forest/10 bg-white-soft px-2.5 py-0.5 text-[11px] font-medium text-warm-gray">
+                      Demo Profile · Example Specialist
                     </span>
                   </div>
 
-                  <h2 className="editorial-serif mt-3 text-[2.2rem] text-forest group-hover:text-cobalt transition-colors">
+                  <h2 className="editorial-serif mt-3 text-[2.2rem] text-forest group-hover:text-teal transition-colors">
                     {person.name}
                   </h2>
                   <p className="text-[14px] font-medium text-warm-gray mt-0.5">{person.degree}</p>

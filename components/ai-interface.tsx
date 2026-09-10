@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
+import { motionTokens } from "@/lib/motion";
 
 type Msg = {
   id: string;
@@ -58,6 +60,42 @@ const taskCategories = [
   },
 ];
 
+/**
+ * Biological Waveform Thinking State:
+ * Serene, clinical, calm waveform animation representing ONCO-AID processing.
+ */
+function BiologicalWaveformThinking() {
+  return (
+    <div className="flex items-center gap-4 rounded-2xl border border-mint/20 bg-forest-mid/60 p-4 text-[14px] text-mint">
+      <div className="relative flex h-6 w-16 items-center justify-center shrink-0">
+        <svg
+          viewBox="0 0 64 24"
+          fill="none"
+          className="h-full w-full stroke-mint"
+          aria-hidden="true"
+        >
+          <path
+            d="M 2 12 Q 10 12 16 12 T 24 5 T 32 19 T 40 12 T 48 8 T 56 12 L 62 12"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="animate-pulse opacity-85"
+          />
+        </svg>
+        <span className="absolute right-0 h-1.5 w-1.5 rounded-full bg-cyan animate-ping" />
+      </div>
+      <div className="flex flex-col">
+        <span className="text-[13.5px] font-medium text-white-soft">
+          Structuring plain-language clinical insights...
+        </span>
+        <span className="text-[11px] text-white-soft/60">
+          Synthesizing terminology and consultation questions
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function AIInterface() {
   const [input, setInput] = useState("");
   const [activeTask, setActiveTask] = useState("report");
@@ -73,10 +111,26 @@ export function AIInterface() {
   ]);
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
 
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const isUserScrolledUp = useRef(false);
+  const reduce = useReducedMotion();
+
+  const handleScroll = useCallback(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    isUserScrolledUp.current = scrollHeight - scrollTop - clientHeight > 60;
+  }, []);
+
+  // Container-bounded scroll (never scrolls the outer browser window)
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!isUserScrolledUp.current && messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages, loading]);
 
   async function send(text: string) {
@@ -92,6 +146,15 @@ export function AIInterface() {
     ];
     setMessages(updatedMessages);
     setLoading(true);
+
+    // Reset user scroll lock when sending a new prompt
+    isUserScrolledUp.current = false;
+    setTimeout(() => {
+      messagesContainerRef.current?.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }, 40);
 
     try {
       // Build conversation history payload
@@ -174,7 +237,7 @@ export function AIInterface() {
   const selectedCategoryObj = taskCategories.find((c) => c.id === activeTask) || taskCategories[0];
 
   return (
-    <div className="relative overflow-hidden rounded-[32px] border border-white-soft/15 bg-[#0a1f1e] p-5 text-white-soft shadow-[var(--shadow-card)] md:p-8">
+    <div className="relative overflow-hidden rounded-[32px] border border-white-soft/14 bg-[#082221] p-5 text-white-soft shadow-[var(--shadow-card)] md:p-8">
       {/* Top Header with Clinical Status */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white-soft/10 pb-5">
         <div>
@@ -182,9 +245,9 @@ export function AIInterface() {
             <h2 className="text-[17px] font-semibold text-white-soft">
               ONCO-AID Clinical Assistant
             </h2>
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[11px] font-medium text-emerald-300">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Active
+              Active Decision Support
             </span>
           </div>
           <p className="mt-1 text-[13.5px] text-white-soft/75">
@@ -213,7 +276,7 @@ export function AIInterface() {
                 onClick={() => setActiveTask(cat.id)}
                 className={`rounded-2xl p-3 text-left transition-all duration-200 border ${
                   isSelected
-                    ? "border-mint bg-white-soft/15 text-white-soft shadow-sm"
+                    ? "border-mint/60 bg-forest-mid text-white-soft shadow-sm"
                     : "border-white-soft/10 bg-white-soft/5 text-white-soft/70 hover:bg-white-soft/10 hover:text-white-soft"
                 }`}
               >
@@ -236,7 +299,7 @@ export function AIInterface() {
             key={item}
             type="button"
             onClick={() => void send(item)}
-            className="group flex items-center gap-2 rounded-xl border border-white-soft/10 bg-white-soft/5 px-3.5 py-2 text-[13px] text-white-soft/85 transition-all hover:border-mint/50 hover:bg-white-soft/10 text-left"
+            className="group flex items-center gap-2 rounded-xl border border-white-soft/10 bg-white-soft/5 px-3.5 py-2 text-[13px] text-white-soft/85 transition-all hover:border-mint/40 hover:bg-white-soft/10 text-left"
           >
             <span>{item}</span>
             <span className="text-mint opacity-0 transition-opacity group-hover:opacity-100">→</span>
@@ -244,11 +307,18 @@ export function AIInterface() {
         ))}
       </div>
 
-      {/* Chat Messages Feed */}
-      <div className="mt-6 max-h-[460px] min-h-[240px] overflow-y-auto space-y-4 pr-1">
+      {/* Chat Messages Feed Container */}
+      <div
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+        className="mt-6 max-h-[460px] min-h-[240px] overflow-y-auto space-y-4 pr-1 scroll-smooth"
+      >
         {messages.map((msg) => (
-          <div
+          <motion.div
             key={msg.id}
+            initial={reduce ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: motionTokens.fast, ease: motionTokens.easeOutSoft }}
             className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
           >
             <div className="flex items-center gap-2 mb-1">
@@ -300,23 +370,17 @@ export function AIInterface() {
                   <button
                     type="button"
                     onClick={() => handleCopy(msg.id, msg.content)}
-                    className="text-mint hover:underline font-medium"
+                    className="text-mint hover:underline font-medium transition-colors"
                   >
-                    {copiedId === msg.id ? "Copied to clipboard" : "Copy note"}
+                    {copiedId === msg.id ? "Copied ✓" : "Copy note"}
                   </button>
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
 
-        {loading ? (
-          <div className="flex items-center gap-3 rounded-2xl border border-white-soft/15 bg-white-soft/5 p-4 text-[14px] text-mint animate-pulse">
-            <span className="h-2 w-2 rounded-full bg-mint animate-ping" />
-            Structuring plain-language clinical insights...
-          </div>
-        ) : null}
-        <div ref={bottomRef} />
+        {loading ? <BiologicalWaveformThinking /> : null}
       </div>
 
       {/* Input Form */}
