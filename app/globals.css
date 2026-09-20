@@ -234,3 +234,13 @@ body {
     padding-bottom: 76px; /* Room for mobile floating quick navigation bar */
   }
 }
+
+/* When Cinematic Opening is active, hide site header and mobile navigation */
+body.intro-active header,
+body.intro-active nav[aria-label="Mobile Quick Navigation"],
+body.intro-active .skip-link {
+  display: none !important;
+}
+body.intro-active {
+  overflow: hidden !important;
+}

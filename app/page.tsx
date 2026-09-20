@@ -10,11 +10,15 @@ import { SpecialistsPreview } from "@/components/home/specialists-preview";
 import { JsonLd } from "@/components/json-ld";
 import { TrustSection } from "@/components/home/trust-section";
 import { MobileHomeDashboard } from "@/components/home/mobile-home-dashboard";
+import { CinematicIntro } from "@/components/home/cinematic-intro";
 
 export default function HomePage() {
   return (
     <main id="main">
       <JsonLd />
+      {/* Cinematic Opening Sequence (First-time visitor experience) */}
+      <CinematicIntro />
+
       {/* Dedicated Mobile Product Experience (Focused Patient Dashboard) */}
       <MobileHomeDashboard />
 
