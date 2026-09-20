@@ -47,7 +47,7 @@ export function AppointmentStepper() {
         {/* Progress Bar */}
         <div className="h-1.5 overflow-hidden rounded-full bg-ivory">
           <div
-            className="h-full bg-gradient-to-r from-forest via-teal to-cobalt transition-[width] duration-320 ease-out"
+            className="h-full bg-gradient-to-r from-forest via-teal to-coral transition-[width] duration-320 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>

@@ -137,13 +137,13 @@ body {
 }
 
 .container-page {
-  width: min(1240px, calc(100% - 36px));
+  width: min(1240px, calc(100% - 32px));
   margin-inline: auto;
 }
 
 @media (min-width: 768px) {
   .container-page {
-    width: min(1240px, calc(100% - 72px));
+    width: min(1240px, calc(100% - 64px));
   }
 }
 
@@ -182,5 +182,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hero-visual {
     animation: none;
+  }
+}
+
+/* Ergonomic Mobile Safe Areas & Touch Target Rules */
+.safe-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+}
+
+@media (max-width: 640px) {
+  body {
+    padding-bottom: 76px; /* Room for mobile floating quick navigation bar */
   }
 }

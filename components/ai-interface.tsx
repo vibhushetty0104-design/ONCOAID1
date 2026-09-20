@@ -6,6 +6,15 @@ import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { motionTokens } from "@/lib/motion";
 
+export type CompanionState =
+  | "idle"
+  | "listening"
+  | "thinking"
+  | "explaining"
+  | "success"
+  | "concern"
+  | "unavailable";
+
 type Msg = {
   id: string;
   role: "user" | "assistant";
@@ -62,34 +71,34 @@ const taskCategories = [
 
 /**
  * Biological Waveform Thinking State:
- * Serene, clinical, calm waveform animation representing ONCO-AID processing.
+ * Serene, clinical, calm waveform animation representing ONCO-AID processing digital care logic.
  */
 function BiologicalWaveformThinking() {
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-mint/20 bg-forest-mid/60 p-4 text-[14px] text-mint">
-      <div className="relative flex h-6 w-16 items-center justify-center shrink-0">
+    <div className="flex items-center gap-4 rounded-2xl border border-mint/25 bg-forest-mid/70 p-4 text-[14px] text-mint shadow-inner">
+      <div className="relative flex h-7 w-20 items-center justify-center shrink-0">
         <svg
-          viewBox="0 0 64 24"
+          viewBox="0 0 80 28"
           fill="none"
           className="h-full w-full stroke-mint"
           aria-hidden="true"
         >
           <path
-            d="M 2 12 Q 10 12 16 12 T 24 5 T 32 19 T 40 12 T 48 8 T 56 12 L 62 12"
-            strokeWidth="1.8"
+            d="M 2 14 Q 12 14 18 14 T 26 6 T 36 22 T 46 14 T 54 8 T 64 16 T 72 14 L 78 14"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="animate-pulse opacity-85"
+            className="animate-pulse opacity-90"
           />
         </svg>
-        <span className="absolute right-0 h-1.5 w-1.5 rounded-full bg-cyan animate-ping" />
+        <span className="absolute right-0.5 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-cyan animate-ping" />
       </div>
       <div className="flex flex-col">
-        <span className="text-[13.5px] font-medium text-white-soft">
+        <span className="text-[13.5px] font-semibold text-white-soft">
           Structuring plain-language clinical insights...
         </span>
-        <span className="text-[11px] text-white-soft/60">
-          Synthesizing terminology and consultation questions
+        <span className="text-[11.5px] text-white-soft/65">
+          Synthesizing terminology, milestones & consultation checklist
         </span>
       </div>
     </div>
@@ -104,17 +113,29 @@ export function AIInterface() {
       id: "init-1",
       role: "assistant",
       content:
-        "Welcome to **ONCO-AID Clinical Assistant**.\n\nI am an educational guide built to help you understand pathology terminology, structure questions for your oncology team, and make sense of your care steps in clear, plain language.\n\nSelect a clinical focus area above or enter your question below.",
+        "Welcome to **ONCO-AID Clinical Assistant**.\n\nI am an educational decision-support guide designed to help you understand pathology terminology, structure questions for your oncology team, and make sense of care milestones in clear, plain language.\n\nSelect a clinical focus area above or enter your question below.",
       timestamp: "Just now",
       provider: "ONCO-AID Clinical Assistant",
     },
   ]);
   const [loading, setLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrolledUp = useRef(false);
   const reduce = useReducedMotion();
+
+  // Derive Companion State
+  const companionState: CompanionState = loading
+    ? "thinking"
+    : hasError
+      ? "unavailable"
+      : input.trim().length > 0
+        ? "listening"
+        : messages.length > 1
+          ? "explaining"
+          : "idle";
 
   const handleScroll = useCallback(() => {
     const el = messagesContainerRef.current;
@@ -137,6 +158,7 @@ export function AIInterface() {
     const content = text.trim();
     if (!content || loading) return;
     setInput("");
+    setHasError(false);
     const userMsgId = `user-${Date.now()}`;
     const nowStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
@@ -157,7 +179,6 @@ export function AIInterface() {
     }, 40);
 
     try {
-      // Build conversation history payload
       const conversationHistory = updatedMessages
         .filter((m) => m.id !== "init-1")
         .slice(-4)
@@ -196,6 +217,7 @@ export function AIInterface() {
         },
       ]);
     } catch {
+      setHasError(true);
       setMessages((m) => [
         ...m,
         {
@@ -238,16 +260,36 @@ export function AIInterface() {
 
   return (
     <div className="relative overflow-hidden rounded-[32px] border border-white-soft/14 bg-[#082221] p-5 text-white-soft shadow-[var(--shadow-card)] md:p-8">
-      {/* Top Header with Clinical Status */}
+      {/* Top Header with Companion State & Clinical Status */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white-soft/10 pb-5">
         <div>
           <div className="flex items-center gap-2.5">
             <h2 className="text-[17px] font-semibold text-white-soft">
               ONCO-AID Clinical Assistant
             </h2>
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[11px] font-medium text-emerald-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Active Decision Support
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
+                companionState === "thinking"
+                  ? "bg-cyan/20 text-cyan border border-cyan/40"
+                  : companionState === "listening"
+                    ? "bg-mint/20 text-mint border border-mint/40"
+                    : companionState === "unavailable"
+                      ? "bg-rose-500/20 text-rose-300 border border-rose-400/30"
+                      : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  companionState === "thinking"
+                    ? "bg-cyan animate-ping"
+                    : companionState === "listening"
+                      ? "bg-mint animate-pulse"
+                      : companionState === "unavailable"
+                        ? "bg-rose-400"
+                        : "bg-emerald-400 animate-pulse"
+                }`}
+              />
+              <span className="capitalize">{companionState}</span>
             </span>
           </div>
           <p className="mt-1 text-[13.5px] text-white-soft/75">
@@ -255,7 +297,7 @@ export function AIInterface() {
           </p>
         </div>
 
-        {/* Clinical Safety Disclaimer Badge */}
+        {/* Clinical Safety Notice */}
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-[12px] text-amber-200 font-medium">
           Notice: Educational guidance only · Non-diagnostic
         </div>

@@ -15,8 +15,13 @@ export function PatientJourneyView() {
       <div className="rounded-[28px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)] md:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-forest/10 pb-5">
           <div>
-            <span className="label text-teal">Care Orientation</span>
-            <h2 className="editorial-serif mt-1 text-[2.2rem] text-forest">
+            <div className="flex items-center gap-2">
+              <span className="label text-teal">Care Orientation</span>
+              <span className="rounded-full bg-forest/8 px-2.5 py-0.5 text-[11px] font-medium text-warm-gray">
+                Demo Patient Record · Fictional Example
+              </span>
+            </div>
+            <h2 className="editorial-serif mt-2 text-[2.2rem] text-forest">
               {demoPatient.name}&apos;s Care Pathway
             </h2>
             <p className="mt-1 text-[14.5px] text-blue-gray">
@@ -26,7 +31,7 @@ export function PatientJourneyView() {
 
           <div className="rounded-2xl border border-teal/20 bg-teal/10 px-4 py-2.5 text-right">
             <span className="text-[11px] font-bold uppercase tracking-wider text-teal block">
-              Current Active Stage
+              Current Active Milestone
             </span>
             <span className="font-serif text-[18px] font-medium text-forest">
               Stage {selectedStage.number} · {selectedStage.title}
@@ -53,7 +58,7 @@ export function PatientJourneyView() {
                   onClick={() => setSelectedStageId(stage.id)}
                   className={`group relative flex flex-col justify-between rounded-2xl p-3 text-left transition-all duration-200 border ${
                     isSelected
-                      ? "border-forest bg-forest text-white-soft shadow-md scale-[1.03]"
+                      ? "border-forest bg-forest text-white-soft shadow-md scale-[1.02]"
                       : isCurrent
                         ? "border-coral/60 bg-coral/10 text-forest"
                         : isCompleted
@@ -76,7 +81,7 @@ export function PatientJourneyView() {
                       {stage.number}
                     </span>
 
-                    {/* Status Marker Icon */}
+                    {/* Status Marker */}
                     <span className="text-[13px] font-bold">
                       {isCompleted ? "✓" : isCurrent ? "●" : "○"}
                     </span>
