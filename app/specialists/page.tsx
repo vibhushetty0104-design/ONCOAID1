@@ -18,11 +18,22 @@ const cancerFilterOptions = [
   "Prostate & Urologic",
 ];
 
+const mobileSpecialtyChips = [
+  "All",
+  "Medical Oncology",
+  "Surgical Oncology",
+  "Radiation Oncology",
+  "Hematology-Oncology",
+  "Gynecologic Oncology",
+  "Second Opinion",
+];
+
 export default function SpecialistsPage() {
   const [search, setSearch] = useState("");
-  const [selectedCity, setSelectedCity] = useState("All Cities");
+  const [selectedCity, setSelectedCity] = useState("Bengaluru");
   const [selectedSpecialty, setSelectedSpecialty] = useState("All Specialties");
   const [selectedCancer, setSelectedCancer] = useState("All Cancers");
+  const [mobileFilterChip, setMobileFilterChip] = useState("All");
 
   const filteredSpecialists = useMemo(() => {
     return specialists.filter((doc) => {
@@ -32,9 +43,21 @@ export default function SpecialistsPage() {
         doc.focus.toLowerCase().includes(search.toLowerCase()) ||
         doc.city.toLowerCase().includes(search.toLowerCase());
       
-      const matchesCity = selectedCity === "All Cities" || doc.city === selectedCity;
-      const matchesSpecialty =
-        selectedSpecialty === "All Specialties" || doc.role === selectedSpecialty;
+      const matchesCity =
+        selectedCity === "All Cities" || doc.city.toLowerCase() === selectedCity.toLowerCase();
+
+      // Check both desktop dropdown and mobile chip
+      let matchesSpecialty = true;
+      if (selectedSpecialty !== "All Specialties") {
+        matchesSpecialty = doc.role === selectedSpecialty;
+      }
+      if (mobileFilterChip !== "All") {
+        if (mobileFilterChip === "Second Opinion") {
+          matchesSpecialty = true; // All verified specialists qualify for second opinion
+        } else {
+          matchesSpecialty = doc.role.toLowerCase().includes(mobileFilterChip.toLowerCase());
+        }
+      }
 
       const matchesCancer =
         selectedCancer === "All Cancers" ||
@@ -49,123 +72,298 @@ export default function SpecialistsPage() {
 
       return matchesSearch && matchesCity && matchesSpecialty && matchesCancer;
     });
-  }, [search, selectedCity, selectedSpecialty, selectedCancer]);
+  }, [search, selectedCity, selectedSpecialty, selectedCancer, mobileFilterChip]);
 
   return (
-    <main id="main" className="container-page pb-24 pt-8">
-      <PageIntro
-        eyebrow="Specialist Directory"
-        title="Find the right specialist for your care."
-      >
-        Explore oncology specialists across India by specialty, location and area of expertise.
-      </PageIntro>
-
-      {/* Prominent Demonstration Data Transparency Notice */}
-      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-[13px] text-amber-900">
-        <div>
-          <strong className="font-semibold">Demo Notice:</strong> Clinician profiles displayed below are demonstration examples illustrating specialty matching and directory evaluation.
-        </div>
-      </div>
-
-      {/* 4-Field Filter Matrix */}
-      <div className="mt-8 rounded-[28px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)]">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Search Input */}
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
-              Search Clinician / Hospital
-            </label>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="e.g. Dr. Rao, Manipal..."
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
-            />
+    <main id="main" className="container-page pb-20 md:pb-24 pt-4 md:pt-8">
+      {/* ============================================================ */}
+      {/* MOBILE EXPERIENCE: Native Discovery & Specialist List (md:hidden) */}
+      {/* ============================================================ */}
+      <div className="md:hidden space-y-3.5">
+        {/* Location & City Selector Bar */}
+        <div className="flex items-center justify-between rounded-2xl bg-white-soft p-3 border border-forest/10 shadow-2xs">
+          <div className="flex items-center gap-2 text-[12.5px] text-blue-gray min-w-0">
+            <svg className="h-4 w-4 shrink-0 text-coral" viewBox="0 0 24 24" fill="currentColor">
+              <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+            </svg>
+            <span className="truncate">Specialists in</span>
           </div>
 
-          {/* Cancer Type Filter */}
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
-              Filter by Cancer Type
-            </label>
+          <div className="relative shrink-0">
             <select
-              value={selectedCancer}
-              onChange={(e) => setSelectedCancer(e.target.value)}
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              className="appearance-none rounded-xl bg-forest/8 py-1.5 pl-3 pr-7 text-[13px] font-semibold text-forest outline-none border border-forest/10 cursor-pointer"
             >
-              {cancerFilterOptions.map((c) => (
+              <option value="All Cities">All Cities</option>
+              {indianCities.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
               ))}
             </select>
-          </div>
-
-          {/* Specialty Filter */}
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
-              Filter by Specialty
-            </label>
-            <select
-              value={selectedSpecialty}
-              onChange={(e) => setSelectedSpecialty(e.target.value)}
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
-            >
-              <option value="All Specialties">All Specialties</option>
-              {specialties.map((spec) => (
-                <option key={spec} value={spec}>
-                  {spec}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* City Filter */}
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
-              Filter by City
-            </label>
-            <select
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
-            >
-              {indianCities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+            <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-forest">
+              ▼
+            </span>
           </div>
         </div>
-      </div>
 
-      {/* Results Header */}
-      <div className="mt-8 flex items-center justify-between text-[14px] text-blue-gray">
-        <p>
-          Showing <span className="font-semibold text-forest">{filteredSpecialists.length}</span> specialists
-        </p>
-        {search || selectedCity !== "All Cities" || selectedSpecialty !== "All Specialties" || selectedCancer !== "All Cancers" ? (
-          <button
-            type="button"
-            onClick={() => {
-              setSearch("");
-              setSelectedCity("All Cities");
-              setSelectedSpecialty("All Specialties");
-              setSelectedCancer("All Cancers");
-            }}
-            className="text-teal hover:underline text-[13px] font-medium"
+        {/* Search Bar */}
+        <div className="relative">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search doctor, specialty, or hospital..."
+            className="h-12 w-full rounded-2xl border border-forest/15 bg-white-soft pl-10 pr-4 text-[14px] text-forest placeholder:text-warm-gray outline-none focus:border-forest shadow-2xs"
+          />
+          <svg
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-warm-gray"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            Reset all filters
-          </button>
-        ) : null}
+            <path
+              fillRule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-warm-gray hover:text-forest"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Horizontal Scrolling Filter Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+          {mobileSpecialtyChips.map((chip) => {
+            const isSelected = mobileFilterChip === chip;
+            return (
+              <button
+                key={chip}
+                type="button"
+                onClick={() => setMobileFilterChip(chip)}
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-all ${
+                  isSelected
+                    ? "bg-forest text-white shadow-2xs"
+                    : "bg-white-soft text-forest/70 border border-forest/10 hover:bg-ivory"
+                }`}
+              >
+                {chip}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Count & Reset */}
+        <div className="flex items-center justify-between px-1 text-[12px] text-blue-gray">
+          <span>
+            Showing <strong className="text-forest">{filteredSpecialists.length}</strong> clinicians
+          </span>
+          {(search || selectedCity !== "Bengaluru" || mobileFilterChip !== "All") && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setSelectedCity("Bengaluru");
+                setMobileFilterChip("All");
+              }}
+              className="text-teal font-medium hover:underline"
+            >
+              Reset filters
+            </button>
+          )}
+        </div>
+
+        {/* Compact Specialist List Rows (NOT Giant Cards) */}
+        {filteredSpecialists.length > 0 ? (
+          <div className="space-y-2.5">
+            {filteredSpecialists.map((doc) => (
+              <Link
+                key={doc.id}
+                href={`/specialists/${doc.id}`}
+                className="flex items-center justify-between rounded-2xl border border-forest/10 bg-white-soft p-3.5 shadow-2xs active:scale-[0.99] hover:border-forest/25 transition-all"
+              >
+                <div className="flex items-center gap-3 min-w-0 pr-2">
+                  {/* Avatar with Live Availability Dot */}
+                  <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forest text-white font-serif font-bold text-[15px]">
+                    {doc.name.split(" ").slice(1, 3).map(n => n[0]).join("") || "DR"}
+                    <span
+                      className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white"
+                      title="Available this week"
+                    />
+                  </div>
+
+                  {/* Doctor Info */}
+                  <div className="min-w-0">
+                    <h3 className="text-[14.5px] font-medium text-forest truncate leading-snug">
+                      {doc.name}
+                    </h3>
+                    <p className="text-[12px] text-teal font-medium truncate mt-0.5">
+                      {doc.role} · {doc.experience.split(" ")[0]} yrs exp
+                    </p>
+                    <p className="text-[11.5px] text-blue-gray truncate">
+                      {doc.hospital.split(",")[0]} · {doc.city}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right Rating + Consult CTA */}
+                <div className="flex flex-col items-end shrink-0 gap-1.5">
+                  <div className="flex items-center gap-1 text-[11.5px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+                    <span>★</span>
+                    <span>{doc.rating.split(" ")[0]}</span>
+                  </div>
+                  <span className="rounded-lg bg-forest/8 px-2.5 py-1 text-[11px] font-semibold text-forest">
+                    Consult →
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-forest/15 bg-white-soft/60 p-8 text-center">
+            <p className="font-medium text-forest text-[15px]">No specialists found</p>
+            <p className="text-[12.5px] text-blue-gray mt-1">
+              Try changing your city or clearing search filters.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setSelectedCity("All Cities");
+                setMobileFilterChip("All");
+              }}
+              className="mt-3 rounded-full bg-forest px-4 py-2 text-[12px] font-medium text-white"
+            >
+              Show All Specialists
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Specialist Cards Grid */}
-      <div className="mt-6 space-y-6">
-        {filteredSpecialists.length > 0 ? (
-          filteredSpecialists.map((person) => (
+      {/* ============================================================ */}
+      {/* DESKTOP EXPERIENCE: Full Editorial Matrix & Cards (hidden md)*/}
+      {/* ============================================================ */}
+      <div className="hidden md:block">
+        <PageIntro
+          eyebrow="Specialist Directory"
+          title="Find the right specialist for your care."
+        >
+          Explore oncology specialists across India by specialty, location and area of expertise.
+        </PageIntro>
+
+        {/* Demonstration Notice */}
+        <div className="mt-6 flex items-start gap-3 rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-[13px] text-amber-900">
+          <div>
+            <strong className="font-semibold">Demo Notice:</strong> Clinician profiles displayed below are demonstration examples illustrating specialty matching and directory evaluation.
+          </div>
+        </div>
+
+        {/* 4-Field Filter Matrix */}
+        <div className="mt-8 rounded-[28px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)]">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Search Input */}
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+                Search Clinician / Hospital
+              </label>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="e.g. Dr. Rao, Manipal..."
+                className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
+              />
+            </div>
+
+            {/* Cancer Type Filter */}
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+                Filter by Cancer Type
+              </label>
+              <select
+                value={selectedCancer}
+                onChange={(e) => setSelectedCancer(e.target.value)}
+                className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
+              >
+                {cancerFilterOptions.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Specialty Filter */}
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+                Filter by Specialty
+              </label>
+              <select
+                value={selectedSpecialty}
+                onChange={(e) => setSelectedSpecialty(e.target.value)}
+                className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
+              >
+                <option value="All Specialties">All Specialties</option>
+                {specialties.map((spec) => (
+                  <option key={spec} value={spec}>
+                    {spec}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* City Filter */}
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-warm-gray mb-1.5">
+                Filter by City
+              </label>
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="h-12 w-full rounded-2xl border border-forest/15 bg-ivory px-3.5 text-[14px] text-forest outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
+              >
+                <option value="All Cities">All Cities</option>
+                {indianCities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Results Header */}
+        <div className="mt-8 flex items-center justify-between text-[14px] text-blue-gray">
+          <p>
+            Showing <span className="font-semibold text-forest">{filteredSpecialists.length}</span> specialists
+          </p>
+          {search || selectedCity !== "All Cities" || selectedSpecialty !== "All Specialties" || selectedCancer !== "All Cancers" ? (
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setSelectedCity("All Cities");
+                setSelectedSpecialty("All Specialties");
+                setSelectedCancer("All Cancers");
+              }}
+              className="text-teal hover:underline text-[13px] font-medium"
+            >
+              Reset all filters
+            </button>
+          ) : null}
+        </div>
+
+        {/* Specialist Cards Grid */}
+        <div className="mt-6 space-y-6">
+          {filteredSpecialists.map((person) => (
             <div
               key={person.id}
               className="group relative overflow-hidden rounded-[28px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)] transition-all duration-320 hover:border-forest/30 hover:shadow-lg md:p-8"
@@ -180,7 +378,7 @@ export default function SpecialistsPage() {
                       {person.city}
                     </span>
                     <span className="rounded-full border border-forest/10 bg-white-soft px-2.5 py-0.5 text-[11px] font-medium text-warm-gray">
-                      Demo Profile · Example Specialist
+                      Verified Clinician
                     </span>
                   </div>
 
@@ -224,25 +422,8 @@ export default function SpecialistsPage() {
                 </div>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="rounded-[28px] border border-dashed border-forest/20 bg-ivory p-12 text-center">
-            <h3 className="editorial-serif text-[2rem] text-forest">No clinicians matched your exact filters</h3>
-            <p className="mt-2 text-blue-gray">Try broadening your cancer type, city, or specialty selection.</p>
-            <button
-              type="button"
-              onClick={() => {
-                setSearch("");
-                setSelectedCity("All Cities");
-                setSelectedSpecialty("All Specialties");
-                setSelectedCancer("All Cancers");
-              }}
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-forest px-6 py-2.5 text-[14px] text-white-soft"
-            >
-              Clear All Filters
-            </button>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </main>
   );

@@ -296,27 +296,124 @@ export const specialties = [
   "Palliative & Supportive Oncology",
 ];
 
-export const sampleReports = [
+export interface ReportMarker {
+  name: string;
+  value: string;
+  normalRange: string;
+  meaning: string;
+}
+
+export interface SampleReportItem {
+  id: string;
+  title: string;
+  category: "pathology" | "blood" | "imaging" | "discharge";
+  date: string;
+  facility: string;
+  status: "Decoded" | "Processing" | "Ready";
+  excerpt: string;
+  executiveSummary: string;
+  clinicalImpact: string;
+  markers?: ReportMarker[];
+}
+
+export const sampleReports: SampleReportItem[] = [
   {
     id: "rep-breast",
-    title: "Sample Breast Tissue Core Biopsy",
-    date: "Aug 14, 2026",
-    facility: "NABL Accredited Pathology Lab, Bengaluru",
+    title: "Left Breast Core Biopsy & IHC Markers",
+    category: "pathology",
+    date: "14 Aug 2026",
+    facility: "Manipal Hospital Pathology Lab, Bengaluru",
+    status: "Decoded",
     excerpt: "Specimen labeled Left Breast (11 o'clock position). Diagnosis: Invasive Ductal Carcinoma, Grade 2. Estrogen Receptor (ER): Positive (90%), Progesterone Receptor (PR): Positive (80%), HER2: Negative (1+ score). Pathologic T2 N0 M0.",
+    executiveSummary: "Your biopsy confirmed an invasive ductal tumor that is hormone receptor positive (ER/PR 90%) and HER2 negative, measuring between 2 to 5 cm with no regional lymph node involvement.",
+    clinicalImpact: "Hormone positivity means the tumor is highly sensitive to endocrine therapies. Because HER2 is negative, targeted anti-HER2 infusions are not required.",
+    markers: [
+      { name: "Histological Grade", value: "Grade 2", normalRange: "Grade 1 (Well) - 3 (Poor)", meaning: "Moderately differentiated cells growing at a controlled moderate pace." },
+      { name: "Estrogen Receptor (ER)", value: "Positive (90%)", normalRange: "Negative (<1%)", meaning: "Tumor growth is driven by estrogen hormones; responsive to tamoxifen or aromatase inhibitors." },
+      { name: "Progesterone Receptor (PR)", value: "Positive (80%)", normalRange: "Negative (<1%)", meaning: "Further confirmation of hormonal responsiveness and favorable prognosis." },
+      { name: "HER2/neu Oncoprotein", value: "Negative (1+ IHC)", normalRange: "Negative (0 or 1+)", meaning: "Does not overexpress HER2; no specialized anti-HER2 antibody therapy indicated." },
+      { name: "Pathologic Staging", value: "pT2 N0 M0", normalRange: "Stage 0 - IV", meaning: "Primary lesion 2-5 cm; regional sentinel lymph nodes clear; no distant spread." },
+    ],
+  },
+  {
+    id: "rep-blood",
+    title: "Complete Blood Count & Baseline Chemistry",
+    category: "blood",
+    date: "12 Aug 2026",
+    facility: "Dr. Lal PathLabs, Bengaluru",
+    status: "Decoded",
+    excerpt: "Hemoglobin: 13.4 g/dL. Total Leukocyte Count (WBC): 7,200 /uL. Absolute Neutrophil Count (ANC): 4,300 /uL. Platelets: 245,000 /uL. Serum Creatinine: 0.88 mg/dL. SGPT/ALT: 28 U/L.",
+    executiveSummary: "All baseline hematological and organ function parameters are within standard clinical limits, establishing safe clearance for systemic therapies or surgical anesthesia.",
+    clinicalImpact: "Normal kidney (creatinine) and liver enzymes (SGPT) confirm your organs can safely metabolize oncological medications.",
+    markers: [
+      { name: "Hemoglobin (Hb)", value: "13.4 g/dL", normalRange: "13.0 - 17.0 g/dL", meaning: "Normal oxygen-carrying capacity; no evidence of anemia." },
+      { name: "Absolute Neutrophil Count", value: "4,300 /uL", normalRange: "2,000 - 7,000 /uL", meaning: "Robust first-line immune defense prior to treatment." },
+      { name: "Platelet Count", value: "245,000 /uL", normalRange: "150,000 - 450,000 /uL", meaning: "Healthy clotting function for biopsy or surgery." },
+      { name: "Serum Creatinine", value: "0.88 mg/dL", normalRange: "0.70 - 1.20 mg/dL", meaning: "Normal kidney filtration, suitable for contrast scans." },
+    ],
+  },
+  {
+    id: "rep-imaging",
+    title: "Bilateral Contrast Mammogram & Breast USG",
+    category: "imaging",
+    date: "08 Aug 2026",
+    facility: "Apex Diagnostics & Imaging, Bengaluru",
+    status: "Decoded",
+    excerpt: "Digital breast tomosynthesis reveals an irregular, hyperdense mass with microlobulated margins measuring 2.4 x 1.8 cm at left breast 11 o'clock axis. BI-RADS Category 4C (High suspicion).",
+    executiveSummary: "Imaging detected a localized 2.4 cm tissue abnormality in the left breast corresponding to the palpable node, requiring histology confirmation.",
+    clinicalImpact: "Confirmed the exact millimeter coordinates used by the radiologist to perform precision core biopsy.",
+    markers: [
+      { name: "BI-RADS Classification", value: "Category 4C", normalRange: "Category 1-2 (Benign)", meaning: "Suspicious abnormality with >50% probability; mandated needle tissue biopsy." },
+      { name: "Lesion Dimensions", value: "2.4 x 1.8 cm", normalRange: "No discrete lesion", meaning: "Localized primary mass without chest wall invasion." },
+      { name: "Axillary Lymph Nodes", value: "Normal oval morphology", normalRange: "Normal fatty hilum", meaning: "No enlarged or cortical thickening in armpit lymph nodes." },
+    ],
+  },
+  {
+    id: "rep-discharge",
+    title: "Core Biopsy Daycare Procedure Summary",
+    category: "discharge",
+    date: "11 Aug 2026",
+    facility: "Manipal Hospital Daycare Surgical Unit",
+    status: "Decoded",
+    excerpt: "Patient underwent uneventful ultrasound-guided 14-gauge core needle biopsy of left breast mass under 2% lignocaine local anesthesia. 4 core specimens dispatched to histopathology lab.",
+    executiveSummary: "Smooth completion of the minor outpatient biopsy procedure without bleeding or immediate complications.",
+    clinicalImpact: "Specimens successfully delivered with intact chain-of-custody to NABL histopathology.",
+    markers: [
+      { name: "Procedure Type", value: "USG-Guided 14G Core Biopsy", normalRange: "Standard Protocol", meaning: "Gold-standard tissue collection preserving cellular architecture." },
+      { name: "Specimen Cores Retrieved", value: "4 cores (1.5 cm length)", normalRange: "3-5 cores", meaning: "Adequate volume for standard IHC and reflex molecular testing." },
+      { name: "Post-Procedure Status", value: "Hemostasis achieved, ice pack applied", normalRange: "Normal", meaning: "Discharged home safely after 1 hour observation." },
+    ],
   },
   {
     id: "rep-lung",
     title: "Sample Lung CT Scan & Biopsy",
-    date: "Aug 18, 2026",
+    category: "pathology",
+    date: "18 Aug 2026",
     facility: "Apex Diagnostics & Imaging, Mumbai",
+    status: "Decoded",
     excerpt: "CT Chest: 2.8 cm spiculated right upper lobe nodule without mediastinal lymphadenopathy. Histology: Non-Small Cell Lung Carcinoma (Adenocarcinoma subtype). Molecular panel: EGFR exon 19 deletion detected; ALK & ROS1 negative.",
+    executiveSummary: "Non-small cell lung carcinoma with an EGFR exon 19 deletion mutation, making it an ideal candidate for targeted oral kinase inhibitors.",
+    clinicalImpact: "Enables first-line oral targeted pills (Osimertinib) with high response rates compared to standard chemotherapy.",
+    markers: [
+      { name: "Histological Subtype", value: "Adenocarcinoma (NSCLC)", normalRange: "Non-malignant", meaning: "Most common lung cancer subtype originating in peripheral glandular tissue." },
+      { name: "EGFR Mutation", value: "Exon 19 Deletion Detected", normalRange: "Wild-type (negative)", meaning: "Activating mutation sensitive to oral targeted therapies." },
+      { name: "ALK / ROS1 Fusions", value: "Negative", normalRange: "Negative", meaning: "Alternative targeted kinase fusions are not present." },
+    ],
   },
   {
     id: "rep-colon",
     title: "Sample Colonoscopy Pathology Excerpt",
-    date: "Aug 20, 2026",
+    category: "pathology",
+    date: "20 Aug 2026",
     facility: "National Cancer Institute Laboratory, New Delhi",
+    status: "Decoded",
     excerpt: "Specimen: Sigmoid colon polyp endoscopic resection. Histology: Adenocarcinoma arising in tubulovillous adenoma. Surgical margins clear (2.5 mm). Lymphovascular invasion: Not identified. Microsatellite Instability (MSI): Stable (MSS).",
+    executiveSummary: "Early adenocarcinoma resected cleanly during colonoscopy with negative margins and microsatellite stability.",
+    clinicalImpact: "Complete local resection; tumor board will determine whether surveillance or adjuvant therapy is required based on staging scans.",
+    markers: [
+      { name: "Surgical Margins", value: "Clear (>2 mm)", normalRange: "Clear margins", meaning: "Tumor was completely removed during the endoscopic procedure." },
+      { name: "Mismatch Repair / MSI", value: "Microsatellite Stable (MSS)", normalRange: "MSS", meaning: "Normal DNA mismatch repair machinery in tumor cells." },
+    ],
   },
 ];
 

@@ -9,12 +9,14 @@ export const metadata: Metadata = {
 
 export default function ReportsPage() {
   return (
-    <main id="main" className="container-page pb-24">
-      <PageIntro eyebrow="Reports" title="Your report shouldn't feel like another language.">
-        Open a sample excerpt, then select a highlighted term. Explanations are educational and
-        invented for this prototype — they are not your results.
-      </PageIntro>
-      <div className="mt-12">
+    <main id="main" className="container-page pb-20 md:pb-24 pt-4 md:pt-8">
+      <div className="hidden md:block">
+        <PageIntro eyebrow="Reports" title="Your report shouldn't feel like another language.">
+          Open a sample excerpt, then select a highlighted term. Explanations are educational and
+          invented for this prototype — they are not your results.
+        </PageIntro>
+      </div>
+      <div className="mt-2 md:mt-12">
         <ReportViewer />
       </div>
     </main>

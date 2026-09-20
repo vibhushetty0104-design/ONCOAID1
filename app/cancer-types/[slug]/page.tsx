@@ -6,6 +6,8 @@ import { cancerTypes, specialists } from "@/lib/data";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { MobileCancerDetail } from "@/components/cancer/mobile-cancer-detail";
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
@@ -13,7 +15,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { id, slug } = (await params) as { id?: string; slug: string };
   const item = cancerTypes.find((c) => c.slug === slug);
   return { title: item ? `${item.name} Guide | ONCO-AID` : "Cancer Guide" };
 }
@@ -35,19 +37,24 @@ export default async function CancerDetailPage({ params }: Props) {
   const fallbackSpecialists = relatedSpecialists.length > 0 ? relatedSpecialists : specialists.slice(0, 2);
 
   return (
-    <main id="main" className="container-page pb-24 pt-8">
-      {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-[13px] text-warm-gray">
-        <Link href="/" className="hover:text-forest">Home</Link>
-        <span>/</span>
-        <Link href="/cancer-types" className="hover:text-forest">Cancer Types</Link>
-        <span>/</span>
-        <span className="text-forest font-medium">{item.name}</span>
-      </nav>
+    <main id="main" className="container-page pb-20 md:pb-24 pt-4 md:pt-8">
+      {/* Mobile Experience (md:hidden) */}
+      <MobileCancerDetail item={item} specialists={fallbackSpecialists} />
 
-      <PageIntro eyebrow={item.category} title={item.name}>
-        {item.summary} This educational guide helps you understand diagnosis steps, biomarker testing, typical treatment pathways, and key questions for your oncologist.
-      </PageIntro>
+      {/* Desktop Experience (hidden md:block) */}
+      <div className="hidden md:block">
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-[13px] text-warm-gray">
+          <Link href="/" className="hover:text-forest">Home</Link>
+          <span>/</span>
+          <Link href="/cancer-types" className="hover:text-forest">Cancer Types</Link>
+          <span>/</span>
+          <span className="text-forest font-medium">{item.name}</span>
+        </nav>
+
+        <PageIntro eyebrow={item.category} title={item.name}>
+          {item.summary} This educational guide helps you understand diagnosis steps, biomarker testing, typical treatment pathways, and key questions for your oncologist.
+        </PageIntro>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         {/* Accordion FAQ & Guide */}
@@ -130,6 +137,7 @@ export default async function CancerDetailPage({ params }: Props) {
           </div>
         </aside>
       </div>
-    </main>
+    </div>
+  </main>
   );
 }

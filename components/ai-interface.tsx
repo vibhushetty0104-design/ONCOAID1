@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
@@ -69,14 +70,40 @@ const taskCategories = [
   },
 ];
 
+const mobileQuickChips = [
+  "Explain my diagnosis",
+  "Questions for doctor",
+  "Understand treatment options",
+  "Decode biopsy markers",
+  "Prepare for scan",
+];
+
+const starterQuestions = [
+  {
+    title: "Explain my pathology report",
+    desc: "Understand ER/PR, HER2, Ki-67 and tumor grade in plain terms",
+    prompt: "Can you explain what ER/PR positive and HER2 negative mean in simple words?",
+  },
+  {
+    title: "Questions for my oncologist",
+    desc: "Generate 5 critical questions for your next consultation",
+    prompt: "What are the 5 most important questions I should ask my oncologist before finalizing my treatment plan?",
+  },
+  {
+    title: "Understanding next steps",
+    desc: "Learn what happens after receiving an initial biopsy diagnosis",
+    prompt: "What are the typical next steps after getting a positive cancer biopsy result?",
+  },
+];
+
 /**
  * Biological Waveform Thinking State:
  * Serene, clinical, calm waveform animation representing ONCO-AID processing digital care logic.
  */
 function BiologicalWaveformThinking() {
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-mint/25 bg-forest-mid/70 p-4 text-[14px] text-mint shadow-inner">
-      <div className="relative flex h-7 w-20 items-center justify-center shrink-0">
+    <div className="flex items-center gap-3 rounded-2xl border border-mint/25 bg-forest-mid/70 p-3.5 text-[13.5px] text-mint shadow-inner">
+      <div className="relative flex h-6 w-16 items-center justify-center shrink-0">
         <svg
           viewBox="0 0 80 28"
           fill="none"
@@ -91,14 +118,14 @@ function BiologicalWaveformThinking() {
             className="animate-pulse opacity-90"
           />
         </svg>
-        <span className="absolute right-0.5 top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-cyan animate-ping" />
+        <span className="absolute right-0.5 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-cyan animate-ping" />
       </div>
-      <div className="flex flex-col">
-        <span className="text-[13.5px] font-semibold text-white-soft">
-          Structuring plain-language clinical insights...
+      <div className="flex flex-col min-w-0">
+        <span className="text-[13px] font-medium text-white-soft truncate">
+          Synthesizing plain-language clinical insights...
         </span>
-        <span className="text-[11.5px] text-white-soft/65">
-          Synthesizing terminology, milestones & consultation checklist
+        <span className="text-[11px] text-white-soft/60 truncate">
+          Consulting validated oncology reference guidelines
         </span>
       </div>
     </div>
@@ -113,7 +140,7 @@ export function AIInterface() {
       id: "init-1",
       role: "assistant",
       content:
-        "Welcome to **ONCO-AID Clinical Assistant**.\n\nI am an educational decision-support guide designed to help you understand pathology terminology, structure questions for your oncology team, and make sense of care milestones in clear, plain language.\n\nSelect a clinical focus area above or enter your question below.",
+        "Welcome to **ONCO-AID AI Guide**.\n\nI am your educational care companion, here to help explain clinical terms, organize questions for your oncology visits, and clarify your milestones in simple, reassuring words.\n\nHow can I support your care journey today?",
       timestamp: "Just now",
       provider: "ONCO-AID Clinical Assistant",
     },
@@ -123,6 +150,7 @@ export function AIInterface() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const mobileContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrolledUp = useRef(false);
   const reduce = useReducedMotion();
 
@@ -138,7 +166,7 @@ export function AIInterface() {
           : "idle";
 
   const handleScroll = useCallback(() => {
-    const el = messagesContainerRef.current;
+    const el = messagesContainerRef.current || mobileContainerRef.current;
     if (!el) return;
     const { scrollTop, scrollHeight, clientHeight } = el;
     isUserScrolledUp.current = scrollHeight - scrollTop - clientHeight > 60;
@@ -146,11 +174,19 @@ export function AIInterface() {
 
   // Container-bounded scroll (never scrolls the outer browser window)
   useEffect(() => {
-    if (!isUserScrolledUp.current && messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: messagesContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
+    if (!isUserScrolledUp.current) {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTo({
+          top: messagesContainerRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+      if (mobileContainerRef.current) {
+        mobileContainerRef.current.scrollTo({
+          top: mobileContainerRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }
     }
   }, [messages, loading]);
 
@@ -169,11 +205,14 @@ export function AIInterface() {
     setMessages(updatedMessages);
     setLoading(true);
 
-    // Reset user scroll lock when sending a new prompt
     isUserScrolledUp.current = false;
     setTimeout(() => {
       messagesContainerRef.current?.scrollTo({
         top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+      mobileContainerRef.current?.scrollTo({
+        top: mobileContainerRef.current.scrollHeight,
         behavior: "smooth",
       });
     }, 40);
@@ -257,210 +296,417 @@ export function AIInterface() {
   }
 
   const selectedCategoryObj = taskCategories.find((c) => c.id === activeTask) || taskCategories[0];
+  const isFreshConversation = messages.length <= 1;
 
   return (
-    <div className="relative overflow-hidden rounded-[32px] border border-white-soft/14 bg-[#082221] p-5 text-white-soft shadow-[var(--shadow-card)] md:p-8">
-      {/* Top Header with Companion State & Clinical Status */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white-soft/10 pb-5">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h2 className="text-[17px] font-semibold text-white-soft">
-              ONCO-AID Clinical Assistant
-            </h2>
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
-                companionState === "thinking"
-                  ? "bg-cyan/20 text-cyan border border-cyan/40"
-                  : companionState === "listening"
-                    ? "bg-mint/20 text-mint border border-mint/40"
-                    : companionState === "unavailable"
-                      ? "bg-rose-500/20 text-rose-300 border border-rose-400/30"
-                      : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
-              }`}
-            >
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${
-                  companionState === "thinking"
-                    ? "bg-cyan animate-ping"
-                    : companionState === "listening"
-                      ? "bg-mint animate-pulse"
-                      : companionState === "unavailable"
-                        ? "bg-rose-400"
-                        : "bg-emerald-400 animate-pulse"
-                }`}
+    <div>
+      {/* ============================================================ */}
+      {/* MOBILE EXPERIENCE: Purpose-Built Native Companion (md:hidden)*/}
+      {/* ============================================================ */}
+      <div className="md:hidden flex flex-col rounded-3xl border border-white-soft/15 bg-[#082221] text-white-soft shadow-xl overflow-hidden">
+        {/* Slender Companion Header */}
+        <div className="flex items-center justify-between border-b border-white-soft/10 px-4 py-3.5 bg-forest-mid/50 backdrop-blur-md">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal/20 text-mint border border-mint/20">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm0 18a8 8 0 118-8 8 8 0 01-8 8z" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h2 className="text-[15px] font-semibold text-white-soft leading-none">
+                  AI Guide
+                </h2>
+                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </div>
+              <p className="text-[11.5px] text-white-soft/70 mt-0.5">
+                Your care companion
+              </p>
+            </div>
+          </div>
+
+          {/* Biological Waveform Pulsing Badge */}
+          <div className="flex items-center gap-1.5 rounded-full border border-mint/20 bg-forest/80 px-2.5 py-1 text-[11px] text-mint">
+            <svg viewBox="0 0 32 14" fill="none" className="h-3 w-7 stroke-mint">
+              <path
+                d="M 1 7 Q 6 7 9 7 T 13 2 T 18 12 T 23 7 T 27 4 L 31 7"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                className={companionState === "thinking" ? "animate-pulse" : ""}
               />
-              <span className="capitalize">{companionState}</span>
+            </svg>
+            <span className="capitalize text-[10.5px] font-medium">
+              {companionState === "thinking" ? "Thinking" : "Ready"}
             </span>
           </div>
-          <p className="mt-1 text-[13.5px] text-white-soft/75">
-            Understand medical terms, prepare questions for your care team, and make sense of your next steps.
-          </p>
         </div>
 
-        {/* Clinical Safety Notice */}
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-[12px] text-amber-200 font-medium">
-          Notice: Educational guidance only · Non-diagnostic
-        </div>
-      </div>
-
-      {/* 4 Task Category Selector Tabs */}
-      <div className="mt-6">
-        <label className="text-[11px] font-bold uppercase tracking-wider text-white-soft/50 block mb-2">
-          Select Clinical Task
-        </label>
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-          {taskCategories.map((cat) => {
-            const isSelected = activeTask === cat.id;
-            return (
+        {/* Horizontal Quick Prompt Chips */}
+        <div className="border-b border-white-soft/8 bg-forest-mid/30 px-3 py-2">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+            {mobileQuickChips.map((chip, cIdx) => (
               <button
-                key={cat.id}
+                key={cIdx}
                 type="button"
-                onClick={() => setActiveTask(cat.id)}
-                className={`rounded-2xl p-3 text-left transition-all duration-200 border ${
-                  isSelected
-                    ? "border-mint/60 bg-forest-mid text-white-soft shadow-sm"
-                    : "border-white-soft/10 bg-white-soft/5 text-white-soft/70 hover:bg-white-soft/10 hover:text-white-soft"
+                onClick={() => void send(chip)}
+                className="shrink-0 rounded-full border border-white-soft/12 bg-white-soft/6 px-3 py-1 text-[12px] font-medium text-white-soft/90 active:bg-mint/20 active:border-mint transition-all"
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Scrollable Conversation Feed */}
+        <div
+          ref={mobileContainerRef}
+          onScroll={handleScroll}
+          className="flex-1 max-h-[52vh] min-h-[320px] overflow-y-auto p-4 space-y-4 scroll-smooth"
+        >
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
+            >
+              <div className="flex items-center gap-1.5 mb-1 px-1">
+                <span className="text-[10.5px] text-white-soft/50">
+                  {msg.role === "user" ? "You" : "AI Guide"}
+                </span>
+                <span className="text-[10px] text-white-soft/30">• {msg.timestamp}</span>
+              </div>
+
+              <div
+                className={`group relative max-w-[90%] rounded-2xl p-3.5 text-[14px] ${
+                  msg.role === "user"
+                    ? "bg-forest-mid text-white border border-white-soft/20 rounded-tr-xs"
+                    : "border border-forest/20 bg-ivory text-ink rounded-tl-xs shadow-xs"
                 }`}
               >
-                <span className="block text-[10px] font-bold uppercase tracking-wider text-mint">
-                  {cat.badge}
-                </span>
-                <span className="mt-1 block text-[14px] font-medium leading-snug">
-                  {cat.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+                {/* Assistant has dark text on light ivory background for maximum readability */}
+                <div className={msg.role === "assistant" ? "text-ink" : "text-white"}>
+                  <MarkdownRenderer content={msg.content} />
+                </div>
 
-      {/* Suggested prompts for active task */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        {selectedCategoryObj.prompts.map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => void send(item)}
-            className="group flex items-center gap-2 rounded-xl border border-white-soft/10 bg-white-soft/5 px-3.5 py-2 text-[13px] text-white-soft/85 transition-all hover:border-mint/40 hover:bg-white-soft/10 text-left"
-          >
-            <span>{item}</span>
-            <span className="text-mint opacity-0 transition-opacity group-hover:opacity-100">→</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Chat Messages Feed Container */}
-      <div
-        ref={messagesContainerRef}
-        onScroll={handleScroll}
-        className="mt-6 max-h-[460px] min-h-[240px] overflow-y-auto space-y-4 pr-1 scroll-smooth"
-      >
-        {messages.map((msg) => (
-          <motion.div
-            key={msg.id}
-            initial={reduce ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: motionTokens.fast, ease: motionTokens.easeOutSoft }}
-            className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] text-white-soft/50">
-                {msg.role === "user" ? "You" : "ONCO-AID Guide"}
-              </span>
-              <span className="text-[11px] text-white-soft/35">• {msg.timestamp}</span>
-              {msg.cached && (
-                <span className="text-[10px] text-cyan/75 rounded bg-cyan/10 px-1.5 py-0.5 uppercase tracking-wider font-semibold">
-                  Cached
-                </span>
-              )}
-            </div>
-            <div
-              className={`group relative max-w-[92%] rounded-2xl p-4 md:max-w-[85%] ${
-                msg.role === "user"
-                  ? "bg-forest-mid text-white-soft border border-white-soft/15"
-                  : "border border-white-soft/10 bg-white-soft/8 text-white-soft/95"
-              }`}
-            >
-              {/* Structured Markdown Message Body */}
-              <MarkdownRenderer content={msg.content} />
-
-              {/* Follow-up Prompts if returned */}
-              {msg.suggestedFollowUps && msg.suggestedFollowUps.length > 0 && (
-                <div className="mt-4 border-t border-white-soft/10 pt-3">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-mint mb-2">
-                    Related follow-ups
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {msg.suggestedFollowUps.map((fu, fIdx) => (
-                      <button
-                        key={fIdx}
-                        type="button"
-                        onClick={() => void send(fu)}
-                        className="rounded-lg border border-white-soft/12 bg-white-soft/6 px-2.5 py-1 text-[12px] text-white-soft/80 hover:bg-white-soft/12 hover:text-white-soft transition-colors"
-                      >
-                        {fu} →
-                      </button>
-                    ))}
+                {/* Follow-up suggestions */}
+                {msg.suggestedFollowUps && msg.suggestedFollowUps.length > 0 && (
+                  <div className="mt-3 border-t border-ink/10 pt-2.5">
+                    <p className="text-[10.5px] font-bold uppercase tracking-wider text-teal mb-1.5">
+                      Recommended Next Questions
+                    </p>
+                    <div className="flex flex-col gap-1.5">
+                      {msg.suggestedFollowUps.map((fu, fIdx) => (
+                        <button
+                          key={fIdx}
+                          type="button"
+                          onClick={() => void send(fu)}
+                          className="rounded-lg bg-forest/5 p-2 text-left text-[12px] text-forest font-medium hover:bg-forest/10 transition-colors"
+                        >
+                          {fu} →
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Assistant Message Footer */}
-              {msg.role === "assistant" && (
-                <div className="mt-3 flex items-center justify-between border-t border-white-soft/10 pt-2 text-[12px] text-white-soft/40">
-                  <span className="text-[11px] italic">{msg.provider || "ONCO-AID"}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(msg.id, msg.content)}
-                    className="text-mint hover:underline font-medium transition-colors"
-                  >
-                    {copiedId === msg.id ? "Copied ✓" : "Copy note"}
-                  </button>
-                </div>
-              )}
+                {/* Assistant footer with Copy */}
+                {msg.role === "assistant" && (
+                  <div className="mt-2.5 flex items-center justify-between border-t border-ink/10 pt-2 text-[11.5px] text-ink/50">
+                    <span>ONCO-AID Guide</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(msg.id, msg.content)}
+                      className="text-teal hover:underline font-medium"
+                    >
+                      {copiedId === msg.id ? "Copied ✓" : "Copy"}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </motion.div>
-        ))}
+          ))}
 
-        {loading ? <BiologicalWaveformThinking /> : null}
+          {/* Empty state suggested questions if conversation just started */}
+          {isFreshConversation && (
+            <div className="pt-2 space-y-2">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-white-soft/50 px-1">
+                Suggested Starting Inquiries
+              </p>
+              {starterQuestions.map((sq, sIdx) => (
+                <button
+                  key={sIdx}
+                  type="button"
+                  onClick={() => void send(sq.prompt)}
+                  className="w-full text-left rounded-2xl border border-white-soft/12 bg-white-soft/5 p-3 hover:bg-white-soft/10 active:scale-[0.99] transition-all"
+                >
+                  <span className="text-[13px] font-semibold text-mint block">
+                    {sq.title}
+                  </span>
+                  <span className="text-[11.5px] text-white-soft/70 block mt-0.5">
+                    {sq.desc}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {loading ? <BiologicalWaveformThinking /> : null}
+        </div>
+
+        {/* Pinned Bottom Input Bar (Keyboard-Safe) */}
+        <div className="border-t border-white-soft/10 bg-forest-mid/60 p-3 backdrop-blur-md">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void send(input);
+            }}
+            className="flex items-center gap-2"
+          >
+            {/* Attachment Button (links to reports/upload) */}
+            <Link
+              href="/reports"
+              aria-label="Upload report or view documents"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white-soft/15 bg-white-soft/8 text-white-soft/80 active:bg-white-soft/20"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+              </svg>
+            </Link>
+
+            {/* Input field */}
+            <div className="relative flex-1">
+              <input
+                id="ai-mobile-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={loading}
+                className="h-11 w-full rounded-xl border border-white-soft/15 bg-white-soft/10 pl-3.5 pr-3 text-[14px] text-white-soft placeholder-white-soft/40 outline-none focus:border-mint"
+                placeholder="Ask anything about your care..."
+              />
+            </div>
+
+            {/* Send button */}
+            <Button
+              type="submit"
+              variant="coral"
+              disabled={loading || !input.trim()}
+              className="h-11 px-4 text-[13.5px] rounded-xl font-medium shrink-0"
+            >
+              {loading ? "..." : "Send"}
+            </Button>
+          </form>
+
+          <p className="text-center text-[10.5px] text-white-soft/45 mt-2">
+            Educational companion · Non-diagnostic · Review with your doctor
+          </p>
+        </div>
       </div>
 
-      {/* Input Form */}
-      <form
-        className="mt-6"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void send(input);
-        }}
-      >
-        <div className="relative flex items-center">
-          <input
-            id="ai-full"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={loading}
-            className="h-14 w-full rounded-2xl border border-white-soft/15 bg-white-soft/8 pl-5 pr-28 text-[15px] text-white-soft placeholder-white-soft/40 outline-none transition-all focus:border-mint focus:shadow-[0_0_0_2px_rgba(215,236,227,0.2)]"
-            placeholder="Ask a question or enter a term from your notes..."
-          />
-          <Button
-            type="submit"
-            variant="coral"
-            className="absolute right-2 top-2 bottom-2 px-5 py-0 h-10 text-[14px]"
-            disabled={loading || !input.trim()}
-          >
-            {loading ? "Sending..." : "Ask AI"}
-          </Button>
-        </div>
-      </form>
+      {/* ============================================================ */}
+      {/* DESKTOP EXPERIENCE: Editorial Full Interface (hidden on md)  */}
+      {/* ============================================================ */}
+      <div className="hidden md:block relative overflow-hidden rounded-[32px] border border-white-soft/14 bg-[#082221] p-8 text-white-soft shadow-[var(--shadow-card)]">
+        {/* Top Header with Companion State & Clinical Status */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white-soft/10 pb-5">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-[17px] font-semibold text-white-soft">
+                ONCO-AID Clinical Assistant
+              </h2>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
+                  companionState === "thinking"
+                    ? "bg-cyan/20 text-cyan border border-cyan/40"
+                    : companionState === "listening"
+                      ? "bg-mint/20 text-mint border border-mint/40"
+                      : companionState === "unavailable"
+                        ? "bg-rose-500/20 text-rose-300 border border-rose-400/30"
+                        : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
+                }`}
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    companionState === "thinking"
+                      ? "bg-cyan animate-ping"
+                      : companionState === "listening"
+                        ? "bg-mint animate-pulse"
+                        : companionState === "unavailable"
+                          ? "bg-rose-400"
+                          : "bg-emerald-400 animate-pulse"
+                  }`}
+                />
+                <span className="capitalize">{companionState}</span>
+              </span>
+            </div>
+            <p className="mt-1 text-[13.5px] text-white-soft/75">
+              Understand medical terms, prepare questions for your care team, and make sense of your next steps.
+            </p>
+          </div>
 
-      {/* Safety Notice */}
-      <div className="mt-4 flex flex-wrap items-center justify-between text-[12px] text-white-soft/50 gap-2">
-        <p>
-          Educational guidance only. Always review pathology and treatment options with your oncologist.
-        </p>
-        <a href="/reports" className="text-mint hover:underline">
-          Decode full pathology report →
-        </a>
+          {/* Clinical Safety Notice */}
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-[12px] text-amber-200 font-medium">
+            Notice: Educational guidance only · Non-diagnostic
+          </div>
+        </div>
+
+        {/* 4 Task Category Selector Tabs */}
+        <div className="mt-6">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-white-soft/50 block mb-2">
+            Select Clinical Task
+          </label>
+          <div className="grid grid-cols-4 gap-2">
+            {taskCategories.map((cat) => {
+              const isSelected = activeTask === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setActiveTask(cat.id)}
+                  className={`rounded-2xl p-3 text-left transition-all duration-200 border ${
+                    isSelected
+                      ? "border-mint/60 bg-forest-mid text-white-soft shadow-sm"
+                      : "border-white-soft/10 bg-white-soft/5 text-white-soft/70 hover:bg-white-soft/10 hover:text-white-soft"
+                  }`}
+                >
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-mint">
+                    {cat.badge}
+                  </span>
+                  <span className="mt-1 block text-[14px] font-medium leading-snug">
+                    {cat.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Suggested prompts for active task */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {selectedCategoryObj.prompts.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => void send(item)}
+              className="group flex items-center gap-2 rounded-xl border border-white-soft/10 bg-white-soft/5 px-3.5 py-2 text-[13px] text-white-soft/85 transition-all hover:border-mint/40 hover:bg-white-soft/10 text-left"
+            >
+              <span>{item}</span>
+              <span className="text-mint opacity-0 transition-opacity group-hover:opacity-100">→</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Chat Messages Feed Container */}
+        <div
+          ref={messagesContainerRef}
+          onScroll={handleScroll}
+          className="mt-6 max-h-[460px] min-h-[240px] overflow-y-auto space-y-4 pr-1 scroll-smooth"
+        >
+          {messages.map((msg) => (
+            <motion.div
+              key={msg.id}
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: motionTokens.fast, ease: motionTokens.easeOutSoft }}
+              className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[11px] text-white-soft/50">
+                  {msg.role === "user" ? "You" : "ONCO-AID Guide"}
+                </span>
+                <span className="text-[11px] text-white-soft/35">• {msg.timestamp}</span>
+                {msg.cached && (
+                  <span className="text-[10px] text-cyan/75 rounded bg-cyan/10 px-1.5 py-0.5 uppercase tracking-wider font-semibold">
+                    Cached
+                  </span>
+                )}
+              </div>
+              <div
+                className={`group relative max-w-[85%] rounded-2xl p-4 ${
+                  msg.role === "user"
+                    ? "bg-forest-mid text-white-soft border border-white-soft/15"
+                    : "border border-white-soft/10 bg-white-soft/8 text-white-soft/95"
+                }`}
+              >
+                <MarkdownRenderer content={msg.content} />
+
+                {/* Follow-up Prompts if returned */}
+                {msg.suggestedFollowUps && msg.suggestedFollowUps.length > 0 && (
+                  <div className="mt-4 border-t border-white-soft/10 pt-3">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-mint mb-2">
+                      Related follow-ups
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {msg.suggestedFollowUps.map((fu, fIdx) => (
+                        <button
+                          key={fIdx}
+                          type="button"
+                          onClick={() => void send(fu)}
+                          className="rounded-lg border border-white-soft/12 bg-white-soft/6 px-2.5 py-1 text-[12px] text-white-soft/80 hover:bg-white-soft/12 hover:text-white-soft transition-colors"
+                        >
+                          {fu} →
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Assistant Message Footer */}
+                {msg.role === "assistant" && (
+                  <div className="mt-3 flex items-center justify-between border-t border-white-soft/10 pt-2 text-[12px] text-white-soft/40">
+                    <span className="text-[11px] italic">{msg.provider || "ONCO-AID"}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(msg.id, msg.content)}
+                      className="text-mint hover:underline font-medium transition-colors"
+                    >
+                      {copiedId === msg.id ? "Copied ✓" : "Copy note"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
+
+          {loading ? <BiologicalWaveformThinking /> : null}
+        </div>
+
+        {/* Input Form */}
+        <form
+          className="mt-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void send(input);
+          }}
+        >
+          <div className="relative flex items-center">
+            <input
+              id="ai-full"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
+              className="h-14 w-full rounded-2xl border border-white-soft/15 bg-white-soft/8 pl-5 pr-28 text-[15px] text-white-soft placeholder-white-soft/40 outline-none transition-all focus:border-mint focus:shadow-[0_0_0_2px_rgba(215,236,227,0.2)]"
+              placeholder="Ask a question or enter a term from your notes..."
+            />
+            <Button
+              type="submit"
+              variant="coral"
+              className="absolute right-2 top-2 bottom-2 px-5 py-0 h-10 text-[14px]"
+              disabled={loading || !input.trim()}
+            >
+              {loading ? "Sending..." : "Ask AI"}
+            </Button>
+          </div>
+        </form>
+
+        {/* Safety Notice */}
+        <div className="mt-4 flex flex-wrap items-center justify-between text-[12px] text-white-soft/50 gap-2">
+          <p>
+            Educational guidance only. Always review pathology and treatment options with your oncologist.
+          </p>
+          <Link href="/reports" className="text-mint hover:underline">
+            Decode full pathology report →
+          </Link>
+        </div>
       </div>
     </div>
   );

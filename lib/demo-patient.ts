@@ -12,9 +12,13 @@ export interface JourneyStage {
   status: JourneyStageStatus;
   dateCompleted?: string;
   description: string;
+  whatHappensHere: string;
+  whatYouMayNeed: string[];
   nextSteps: string[];
   questionsForDoctor: string[];
   keyDocuments: string[];
+  actionLabel?: string;
+  actionHref?: string;
 }
 
 export const demoPatient = {
@@ -42,9 +46,13 @@ export const patientJourneyStages: JourneyStage[] = [
     status: "completed",
     dateCompleted: "04 Aug 2026",
     description: "First clinical physical evaluation following noticed lump and local symptom review.",
+    whatHappensHere: "Your oncologist conducts an in-depth physical exam, reviews medical history, and orders diagnostic baseline investigations.",
+    whatYouMayNeed: ["Prior health records and prescriptions", "List of current medications", "Insurance policy number / ABHA card"],
     nextSteps: ["Completed diagnostic mammogram and ultrasound imaging."],
     questionsForDoctor: ["What initial scans are required before tissue sampling?"],
     keyDocuments: ["Clinical examination summary", "Initial ultrasound notes"],
+    actionLabel: "View Initial Records",
+    actionHref: "/reports",
   },
   {
     id: "02",
@@ -53,9 +61,13 @@ export const patientJourneyStages: JourneyStage[] = [
     status: "completed",
     dateCompleted: "11 Aug 2026",
     description: "High-resolution bilateral mammogram, ultrasound-guided core needle biopsy, and baseline blood profile.",
+    whatHappensHere: "Targeted imaging pinpoints the tissue abnormality, followed by a minor needle biopsy to safely retrieve cellular samples.",
+    whatYouMayNeed: ["Comfortable loose clothing", "Local anesthesia consent form", "Caregiver or family escort"],
     nextSteps: ["Biopsy specimen submitted to NABL accredited histopathology lab."],
     questionsForDoctor: ["How long will immunohistochemistry (IHC) marker results take?"],
     keyDocuments: ["Mammogram DICOM report", "Core needle biopsy procedure note"],
+    actionLabel: "View Imaging Results",
+    actionHref: "/reports",
   },
   {
     id: "03",
@@ -63,6 +75,12 @@ export const patientJourneyStages: JourneyStage[] = [
     title: "Pathology & Diagnosis",
     status: "current",
     description: "Tissue histopathology confirmed Invasive Ductal Carcinoma Grade 2. ER/PR positive (90%), HER2 1+ negative. pT2 N0 M0.",
+    whatHappensHere: "Pathologists analyze cellular architecture and molecular markers (ER, PR, HER2, Ki-67) to classify the exact cancer subtype and sensitivity to medications.",
+    whatYouMayNeed: [
+      "Pathology report copy & tissue block receipts",
+      "List of questions about biomarker implications",
+      "Second opinion histopathology request form if desired",
+    ],
     nextSteps: [
       "Review IHC biomarker report with medical oncologist Dr. Ananya Rao on 28 Aug 2026.",
       "Discuss whether neoadjuvant chemotherapy or upfront surgery is optimal.",
@@ -74,6 +92,8 @@ export const patientJourneyStages: JourneyStage[] = [
       "Are any further molecular genomic tests (like Oncotype DX or MammaPrint) needed?",
     ],
     keyDocuments: ["Histopathology & IHC Marker Report (Aug 2026)", "Baseline CBC & Metabolic Panel"],
+    actionLabel: "Decode Pathology Report",
+    actionHref: "/reports",
   },
   {
     id: "04",
@@ -81,9 +101,13 @@ export const patientJourneyStages: JourneyStage[] = [
     title: "Staging Evaluation",
     status: "upcoming",
     description: "Whole-body PET-CT or contrast CT to evaluate regional lymph nodes and confirm localized staging.",
+    whatHappensHere: "Cross-sectional full-body scanning assesses whether cancer cells are confined to the primary site or involve adjacent nodes or organs.",
+    whatYouMayNeed: ["Fasting 6 hours prior to scan", "Normal kidney function (Serum Creatinine) report", "Diabetic medication protocol adjustment"],
     nextSteps: ["Schedule contrast staging scan at hospital diagnostic wing."],
     questionsForDoctor: ["What preparations are needed 24 hours before the PET scan?"],
     keyDocuments: [],
+    actionLabel: "Prepare for Staging Scan",
+    actionHref: "/ai?task=appointment",
   },
   {
     id: "05",
@@ -91,9 +115,13 @@ export const patientJourneyStages: JourneyStage[] = [
     title: "Treatment Planning & Tumor Board",
     status: "upcoming",
     description: "Multi-disciplinary tumor board review involving surgical, medical, and radiation oncology specialists.",
+    whatHappensHere: "A panel of specialists collectively evaluates your pathology and staging scans to agree on a personalized sequence of therapies.",
+    whatYouMayNeed: ["Comprehensive folder with all reports", "Companion/caregiver to take notes", "Clear understanding of hospital treatment packages"],
     nextSteps: ["Receive unified treatment protocol consensus document."],
     questionsForDoctor: ["What clinical trial or standard-of-care protocols were discussed?"],
     keyDocuments: [],
+    actionLabel: "Generate Tumor Board Questions",
+    actionHref: "/ai?task=questions",
   },
   {
     id: "06",
@@ -101,9 +129,13 @@ export const patientJourneyStages: JourneyStage[] = [
     title: "Active Treatment",
     status: "upcoming",
     description: "Execution of surgical resection, systemic infusions/targeted pills, and/or radiation therapy sessions.",
+    whatHappensHere: "Delivery of planned curative therapies, supported by anti-nausea, blood count monitoring, and hydration protocols.",
+    whatYouMayNeed: ["Hospital admission / daycare kit", "Emergency contact numbers", "Prescription antiemetics and oral care kit"],
     nextSteps: ["Chemotherapy daycare orientation and supportive medication protocol."],
     questionsForDoctor: ["Who do I call immediately if fever or severe nausea occurs at home?"],
     keyDocuments: [],
+    actionLabel: "View Care & Safety Tips",
+    actionHref: "/cancer-types/breast-cancer",
   },
   {
     id: "07",
@@ -111,9 +143,13 @@ export const patientJourneyStages: JourneyStage[] = [
     title: "Post-Treatment Follow-up",
     status: "upcoming",
     description: "Post-operative monitoring, blood count normalization, and periodic surveillance scans.",
+    whatHappensHere: "Regular checkups verify healing, manage treatment side-effects, and monitor for continued complete remission.",
+    whatYouMayNeed: ["Follow-up schedule calendar", "Symptom journal log", "Surveillance blood test requisitions"],
     nextSteps: ["Establish 3-month clinical monitoring calendar."],
     questionsForDoctor: ["What symptoms should trigger an unscheduled clinic visit?"],
     keyDocuments: [],
+    actionLabel: "Plan Follow-up Schedule",
+    actionHref: "/dashboard/appointments",
   },
   {
     id: "08",
@@ -121,9 +157,13 @@ export const patientJourneyStages: JourneyStage[] = [
     title: "Survivorship & Wellness",
     status: "upcoming",
     description: "Long-term endocrine maintenance, rehabilitation, nutritional guidance, and emotional well-being.",
+    whatHappensHere: "Transition into long-term health preservation, lifestyle guidance, recurrence risk reduction, and emotional support networks.",
+    whatYouMayNeed: ["Survivorship care plan document", "Nutritional guideline booklet", "Support community connection"],
     nextSteps: ["Long-term survivorship care plan."],
     questionsForDoctor: ["What lifestyle and exercise modifications are proven to aid recovery?"],
     keyDocuments: [],
+    actionLabel: "Explore Wellness Resources",
+    actionHref: "/cancer-types",
   },
 ];
 

@@ -9,21 +9,28 @@ import { ResourcesPreview } from "@/components/home/resources-preview";
 import { SpecialistsPreview } from "@/components/home/specialists-preview";
 import { JsonLd } from "@/components/json-ld";
 import { TrustSection } from "@/components/home/trust-section";
+import { MobileHomeDashboard } from "@/components/home/mobile-home-dashboard";
 
 export default function HomePage() {
   return (
     <main id="main">
       <JsonLd />
-      <HomeHero />
-      <ProductDemonstration />
-      <PatientJourney />
-      <CareJourney />
-      <AIPreview />
-      <CancerExplorerPreview />
-      <SpecialistsPreview />
-      <ResourcesPreview />
-      <TrustSection />
-      <FinalCta />
+      {/* Dedicated Mobile Product Experience (Focused Patient Dashboard) */}
+      <MobileHomeDashboard />
+
+      {/* Editorial Healthcare Institution Presentation (Desktop & Tablet) */}
+      <div className="hidden md:block">
+        <HomeHero />
+        <ProductDemonstration />
+        <PatientJourney />
+        <CareJourney />
+        <AIPreview />
+        <CancerExplorerPreview />
+        <SpecialistsPreview />
+        <ResourcesPreview />
+        <TrustSection />
+        <FinalCta />
+      </div>
     </main>
   );
 }
