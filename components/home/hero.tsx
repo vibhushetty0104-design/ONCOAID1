@@ -91,37 +91,49 @@ export function HomeHero() {
               </Link>
             </motion.div>
 
-            {/* Contextual Starting Points (no emojis, clean typography) */}
+            {/* Contextual Starting Points (clean editorial links, no pills) */}
             <motion.div
               className="mt-10 border-t border-white-soft/10 pt-6"
               initial={reduce ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: motionTokens.slow, delay: d ?? 0.65, ease: motionTokens.easeOutSoft }}
             >
-              <p className="text-[11.5px] font-semibold uppercase tracking-[0.16em] text-white-soft/50 mb-3">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white-soft/50 mb-3">
                 Immediate Starting Points
               </p>
-              <div className="flex flex-wrap gap-2 sm:gap-2.5">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 text-[13.5px]">
                 <Link
                   href="/reports"
-                  className="group inline-flex items-center gap-2 rounded-full border border-white-soft/14 bg-white-soft/6 px-4 py-1.5 text-[13px] text-white-soft/90 transition-all hover:border-cyan/40 hover:bg-white-soft/10"
+                  className="group inline-flex items-center gap-1.5 text-white-soft/85 hover:text-white-soft transition-colors"
                 >
-                  <span>Biopsy & pathology decode</span>
-                  <span className="text-cyan transition-transform group-hover:translate-x-0.5">→</span>
+                  <span className="underline decoration-white-soft/30 underline-offset-4 group-hover:decoration-mint">
+                    Biopsy & pathology decode
+                  </span>
+                  <span className="text-mint text-[12px] transition-transform group-hover:translate-x-0.5">→</span>
                 </Link>
+
+                <span className="text-white-soft/25 hidden sm:inline">·</span>
+
                 <Link
                   href="/ai?task=appointment"
-                  className="group inline-flex items-center gap-2 rounded-full border border-white-soft/14 bg-white-soft/6 px-4 py-1.5 text-[13px] text-white-soft/90 transition-all hover:border-cyan/40 hover:bg-white-soft/10"
+                  className="group inline-flex items-center gap-1.5 text-white-soft/85 hover:text-white-soft transition-colors"
                 >
-                  <span>Questions for your oncologist</span>
-                  <span className="text-cyan transition-transform group-hover:translate-x-0.5">→</span>
+                  <span className="underline decoration-white-soft/30 underline-offset-4 group-hover:decoration-mint">
+                    Questions for your oncologist
+                  </span>
+                  <span className="text-mint text-[12px] transition-transform group-hover:translate-x-0.5">→</span>
                 </Link>
+
+                <span className="text-white-soft/25 hidden sm:inline">·</span>
+
                 <Link
                   href="/care"
-                  className="group inline-flex items-center gap-2 rounded-full border border-white-soft/14 bg-white-soft/6 px-4 py-1.5 text-[13px] text-white-soft/90 transition-all hover:border-cyan/40 hover:bg-white-soft/10"
+                  className="group inline-flex items-center gap-1.5 text-white-soft/85 hover:text-white-soft transition-colors"
                 >
-                  <span>Care pathways</span>
-                  <span className="text-cyan transition-transform group-hover:translate-x-0.5">→</span>
+                  <span className="underline decoration-white-soft/30 underline-offset-4 group-hover:decoration-mint">
+                    Care pathways
+                  </span>
+                  <span className="text-mint text-[12px] transition-transform group-hover:translate-x-0.5">→</span>
                 </Link>
               </div>
             </motion.div>

@@ -84,7 +84,7 @@ export function HeroJourneyPathway() {
   return (
     <div>
       {/* Mobile Responsive Version (Visible on Mobile & Tablet) */}
-      <div className="lg:hidden w-full mt-8 rounded-[24px] border border-white-soft/14 bg-[#082221]/95 p-5 text-white-soft shadow-[0_16px_40px_rgba(4,20,20,0.35)]">
+      <div className="lg:hidden w-full mt-8 rounded-2xl border border-white-soft/14 bg-[#082221]/95 p-4 sm:p-5 text-white-soft shadow-lg">
         <div className="flex items-center justify-between border-b border-white-soft/10 pb-3">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-mint block">
@@ -94,7 +94,7 @@ export function HeroJourneyPathway() {
               STAGE 02 OF 08 · Understanding your diagnosis
             </span>
           </div>
-          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+          <span className="rounded-md border border-emerald-500/30 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
             Active Trajectory
           </span>
         </div>
@@ -140,11 +140,8 @@ export function HeroJourneyPathway() {
             : `perspective(1000px) rotateY(${offset.x * 0.35}deg) rotateX(${-offset.y * 0.35}deg) translate3d(${offset.x * 0.25}px, ${offset.y * 0.25}px, 0)`,
         }}
       >
-        {/* Ambient Glow */}
-        <div className="pointer-events-none absolute -inset-2 rounded-[40px] bg-gradient-to-b from-cyan/15 via-mint/10 to-transparent blur-2xl opacity-60" />
-
         {/* Main Panel */}
-        <div className="relative overflow-hidden rounded-[32px] border border-white-soft/14 bg-[#082221]/92 p-6 xl:p-8 backdrop-blur-xl shadow-[0_24px_60px_rgba(4,20,20,0.45)]">
+        <div className="relative overflow-hidden rounded-2xl border border-white-soft/14 bg-[#082221]/95 p-6 xl:p-7 backdrop-blur-md shadow-[0_16px_40px_rgba(4,20,20,0.3)]">
           {/* Panel Header */}
           <div className="flex items-center justify-between border-b border-white-soft/10 pb-4">
             <div>

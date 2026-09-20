@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { pathways } from "@/lib/data";
 import { Button } from "@/components/ui/button";
@@ -37,50 +38,46 @@ export function PatientJourney() {
   const selected = pathways.find((p) => p.slug === active) ?? pathways[0];
 
   return (
-    <section id="journey" className="bg-ivory py-24 md:py-32">
+    <section id="journey" className="bg-ivory py-20 md:py-28">
       <div className="container-page">
         <Reveal>
           <p className="label text-teal">Patient Navigation</p>
-          <h2 className="editorial-serif mt-3 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
+          <h2 className="heading-serif-section mt-3 text-forest">
             Know what comes next.
           </h2>
-          <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-blue-gray">
+          <p className="mt-3 max-w-2xl text-[15.5px] leading-relaxed text-blue-gray">
             Cancer care can feel like a series of unfamiliar decisions. ONCO-AID helps you understand where you are, what comes next, and what to discuss with your care team.
           </p>
         </Reveal>
 
-        {/* Mobile View: Inline Accordion/Disclosure (Zero Layout Displacement) */}
-        <div className="mt-10 flex flex-col lg:hidden space-y-3">
+        {/* Mobile View: Editorial Guided Pathway Stream (De-cardified) */}
+        <div className="mt-10 flex flex-col lg:hidden border-b border-forest/10">
           {pathways.map((item) => {
             const isExpanded = item.slug === active;
             return (
               <div
                 key={item.slug}
-                className={`overflow-hidden rounded-2xl border transition-colors ${
-                  isExpanded
-                    ? "border-forest/20 bg-white-soft shadow-sm"
-                    : "border-forest/10 bg-white-soft/60"
-                }`}
+                className="border-t border-forest/10 transition-colors"
               >
                 <button
                   type="button"
                   onClick={() => setActive(isExpanded ? "" : item.slug)}
                   aria-expanded={isExpanded}
-                  className="flex w-full items-center justify-between p-4 text-left"
+                  className="flex w-full items-center justify-between py-4 text-left transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-[12px] font-bold text-coral">{item.number}</span>
+                    <span className="text-[12px] font-bold text-coral w-6">{item.number}</span>
                     <span className="text-forest/70">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         {icons[item.slug]}
                       </svg>
                     </span>
-                    <span className="font-serif text-[19px] font-medium text-forest">
+                    <span className="font-serif text-[18px] font-medium text-forest">
                       {item.title}
                     </span>
                   </div>
                   <span
-                    className={`text-forest/60 transition-transform duration-200 ${
+                    className={`text-[13px] text-forest/60 transition-transform duration-200 ${
                       isExpanded ? "rotate-90 text-coral font-bold" : ""
                     }`}
                   >
@@ -97,15 +94,19 @@ export function PatientJourney() {
                       animate={{ height: "auto", opacity: 1 }}
                       exit={reduce ? undefined : { height: 0, opacity: 0 }}
                       transition={{ duration: motionTokens.normal, ease: motionTokens.easeOutSoft }}
-                      className="border-t border-forest/8 px-4 pb-5 pt-3"
+                      className="pb-5 pt-1 pl-9 pr-2"
                     >
-                      <p className="text-[14.5px] leading-relaxed text-blue-gray">
+                      <p className="text-[14px] leading-relaxed text-blue-gray">
                         {item.description}
                       </p>
-                      <div className="mt-4">
-                        <Button href={item.href} variant="primary" className="py-2 px-4 text-[13.5px]">
-                          Enter this pathway →
-                        </Button>
+                      <div className="mt-3.5">
+                        <Link
+                          href={item.href}
+                          className="inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-teal hover:text-forest transition-colors"
+                        >
+                          <span>Enter this pathway</span>
+                          <span>→</span>
+                        </Link>
                       </div>
                     </motion.div>
                   )}
@@ -115,9 +116,9 @@ export function PatientJourney() {
           })}
         </div>
 
-        {/* Desktop View: Interactive Split-View Grid */}
-        <div className="mt-14 hidden lg:grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,380px)]">
-          <ul className="flex flex-col">
+        {/* Desktop View: Interactive Split-View Stream */}
+        <div className="mt-14 hidden lg:grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)]">
+          <ul className="flex flex-col border-b border-forest/10">
             {pathways.map((item) => {
               const isActive = item.slug === active;
               return (
@@ -126,23 +127,23 @@ export function PatientJourney() {
                     type="button"
                     onClick={() => setActive(item.slug)}
                     onMouseEnter={() => setActive(item.slug)}
-                    className={`pathway-row group flex w-full items-start gap-5 border-t border-forest/10 px-2 py-5 text-left transition-colors duration-200 ${
-                      isActive ? "bg-white-soft/70" : "bg-transparent"
+                    className={`pathway-row group flex w-full items-start gap-4 border-t border-forest/10 px-3 py-4 text-left transition-colors duration-200 ${
+                      isActive ? "bg-white-soft/80" : "bg-transparent hover:bg-white-soft/40"
                     }`}
                     aria-pressed={isActive}
                   >
-                    <span className="mt-1 w-8 text-[13px] text-coral">{item.number}</span>
+                    <span className="mt-0.5 w-6 text-[12px] font-bold text-coral">{item.number}</span>
                     <span className="mt-0.5 text-forest/70">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         {icons[item.slug]}
                       </svg>
                     </span>
                     <span className="flex-1">
-                      <span className="pathway-title block text-[21px] font-medium tracking-tight text-forest transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:text-[25px]">
+                      <span className="pathway-title block text-[19px] font-medium tracking-tight text-forest transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
                         {item.title}
                       </span>
                       <span
-                        className={`mt-1 block max-w-xl text-[14.5px] leading-relaxed transition-opacity duration-[320ms] ${
+                        className={`mt-1 block max-w-xl text-[14px] leading-relaxed transition-opacity duration-[320ms] ${
                           isActive ? "text-forest font-medium opacity-100" : "text-blue-gray opacity-80"
                         }`}
                       >
@@ -150,8 +151,8 @@ export function PatientJourney() {
                       </span>
                     </span>
                     <span
-                      className={`pathway-arrow mt-2 transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isActive ? "text-coral font-bold translate-x-1" : "text-forest/60"
+                      className={`pathway-arrow mt-1 transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        isActive ? "text-coral font-bold translate-x-1" : "text-forest/40"
                       }`}
                     >
                       →
@@ -169,18 +170,18 @@ export function PatientJourney() {
               animate={{ opacity: 1, y: 0 }}
               exit={reduce ? undefined : { opacity: 0, y: 8 }}
               transition={{ duration: motionTokens.normal, ease: motionTokens.easeOutSoft }}
-              className="flex min-h-[320px] flex-col justify-between rounded-[28px] bg-white-soft p-8 shadow-[var(--shadow-card)] md:p-10"
+              className="flex min-h-[300px] flex-col justify-between rounded-2xl border border-forest/10 bg-white-soft p-7 shadow-xs"
             >
               <div>
-                <p className="label text-coral">{selected.number}</p>
-                <h3 className="editorial-serif mt-4 text-[2.2rem] leading-none text-forest">
+                <p className="text-meta-ui text-coral">{selected.number}</p>
+                <h3 className="heading-sans-ui mt-3 text-forest">
                   {selected.title}
                 </h3>
-                <p className="mt-5 text-[16px] leading-relaxed text-blue-gray">
+                <p className="mt-4 text-[14.5px] leading-relaxed text-blue-gray">
                   {selected.description}
                 </p>
               </div>
-              <Button href={selected.href} className="mt-8 self-start">
+              <Button href={selected.href} className="mt-6 self-start text-[13.5px]">
                 Enter this pathway →
               </Button>
             </motion.aside>

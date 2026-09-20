@@ -51,23 +51,23 @@ export function AIPreview() {
   const [selectedTask, setSelectedTask] = useState(aiTasks[0]);
 
   return (
-    <section className="bg-ivory py-24 md:py-32">
+    <section className="bg-ivory py-20 md:py-28">
       <div className="container-page">
         <Reveal>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="label text-teal">Clinical Assistant</span>
-            <span className="text-[12px] text-warm-gray">• Decision Support</span>
+            <span className="label text-teal">AI Guide</span>
+            <span className="text-[12px] text-warm-gray">• Your Care Companion</span>
           </div>
-          <h2 className="editorial-serif mt-3 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
+          <h2 className="heading-serif-section mt-3 text-forest">
             Clear answers to difficult questions.
           </h2>
-          <p className="mt-3 max-w-2xl text-[17px] leading-relaxed text-blue-gray">
+          <p className="mt-3 max-w-2xl text-[15.5px] leading-relaxed text-blue-gray">
             Understand medical terms, prepare questions for your care team, and make sense of your next steps.
           </p>
         </Reveal>
 
         {/* Task Grid Selection */}
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {aiTasks.map((task) => {
             const isSelected = selectedTask.id === task.id;
             return (
@@ -77,26 +77,26 @@ export function AIPreview() {
                 onClick={() => {
                   setSelectedTask(task);
                 }}
-                className={`flex flex-col justify-between rounded-[28px] border p-6 text-left transition-all duration-300 ${
+                className={`flex flex-col justify-between rounded-xl border p-5 text-left transition-all ${
                   isSelected
-                    ? "border-forest bg-white-soft shadow-[var(--shadow-card)] scale-[1.01]"
+                    ? "border-forest bg-white-soft shadow-xs"
                     : "border-forest/10 bg-white-soft/60 hover:border-forest/20 hover:bg-white-soft"
                 }`}
               >
                 <div>
-                  <span className="text-[12px] font-bold uppercase tracking-wider text-teal">
+                  <span className="text-meta-ui text-teal">
                     Task
                   </span>
-                  <h3 className="font-serif mt-2 text-[22px] leading-snug text-forest">
+                  <h3 className="heading-sans-ui mt-2 text-[17px] text-forest">
                     {task.title}
                   </h3>
                   <p className="mt-1 text-[13px] font-medium text-warm-gray">{task.subtitle}</p>
-                  <p className="mt-3 text-[14px] leading-relaxed text-blue-gray line-clamp-3">
+                  <p className="mt-2.5 text-[13.5px] leading-relaxed text-blue-gray line-clamp-3">
                     {task.description}
                   </p>
                 </div>
 
-                <div className="mt-6 flex items-center gap-1.5 text-[13px] font-semibold text-teal">
+                <div className="mt-5 flex items-center gap-1.5 text-[12.5px] font-semibold text-teal">
                   <span>{isSelected ? "Selected Task" : "Select Task"}</span>
                   <span>{isSelected ? "✓" : "→"}</span>
                 </div>
@@ -106,45 +106,45 @@ export function AIPreview() {
         </div>
 
         {/* Interactive Task Execution Spotlight Box */}
-        <div className="mt-8 overflow-hidden rounded-[32px] border border-forest/10 bg-white-soft p-6 shadow-[var(--shadow-card)] md:p-10">
+        <div className="mt-8 rounded-2xl border border-forest/12 bg-white-soft p-6 shadow-xs md:p-8">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-center">
             <div>
               <span className="label text-teal">Active Clinical Task</span>
-              <h3 className="editorial-serif mt-2 text-[2.4rem] text-forest">
+              <h3 className="heading-sans-ui mt-2 text-forest">
                 {selectedTask.title}
               </h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-blue-gray max-w-xl">
+              <p className="mt-3 text-[14.5px] leading-relaxed text-blue-gray max-w-xl">
                 {selectedTask.description}
               </p>
 
-              {/* Sample Prompt Pill */}
-              <div className="mt-6 rounded-2xl bg-ivory p-4 border border-forest/8">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-warm-gray block">
+              {/* Sample Prompt Box */}
+              <div className="mt-5 rounded-xl bg-ivory p-4 border border-forest/8">
+                <span className="text-meta-ui text-warm-gray block">
                   Suggested Task Query:
                 </span>
-                <p className="text-[15px] font-medium text-forest mt-1">
+                <p className="text-[14.5px] font-medium text-forest mt-1">
                   &ldquo;{selectedTask.examplePrompt}&rdquo;
                 </p>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button href={selectedTask.href} variant="coral" className="px-6 py-3 text-[14px]">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <Button href={selectedTask.href} variant="coral" className="px-5 py-2.5 text-[13.5px]">
                   {selectedTask.buttonLabel}
                 </Button>
-                <Button href="/ai" variant="ghost" className="text-forest text-[14px]">
+                <Button href="/ai" variant="ghost" className="text-forest text-[13.5px]">
                   Talk to ONCO-AID
                 </Button>
               </div>
             </div>
 
             {/* Right Side Clinical Safety Notice */}
-            <div className="rounded-[24px] bg-forest p-6 sm:p-8 text-white-soft">
-              <span className="label text-mint">Clinical Safety & Restraint</span>
-              <h4 className="editorial-serif mt-3 text-[1.8rem]">Educational Companion</h4>
-              <p className="mt-3 text-[14px] leading-relaxed text-white-soft/80">
+            <div className="rounded-xl bg-forest p-6 text-white-soft">
+              <span className="text-meta-ui text-mint">Clinical Safety & Restraint</span>
+              <h4 className="heading-sans-ui mt-2 text-white-soft">Care Companion</h4>
+              <p className="mt-2.5 text-[13.5px] leading-relaxed text-white-soft/80">
                 ONCO-AID is engineered strictly as an educational decision-support tool. It never claims to diagnose cancer, predict prognosis, or prescribe medications.
               </p>
-              <div className="mt-6 rounded-xl border border-white-soft/15 bg-white-soft/8 p-3.5 text-[12px] text-white-soft/80">
+              <div className="mt-5 rounded-lg border border-white-soft/12 bg-white-soft/8 p-3 text-[11.5px] text-white-soft/80">
                 Private & secure: Clinical questions are processed server-side with zero data harvesting.
               </div>
             </div>

@@ -27,18 +27,18 @@ export function CancerExplorerPreview() {
   const visible = results.slice(0, 6);
 
   return (
-    <section className="bg-ivory-deep py-24 md:py-32">
+    <section className="bg-ivory-deep py-20 md:py-28">
       <div className="container-page">
         <Reveal>
           <div className="flex flex-wrap items-center gap-2">
             <span className="label text-teal">Discovery Hub</span>
             <span className="text-[12px] text-warm-gray">• 16+ Conditions Mapped</span>
           </div>
-          <h2 className="editorial-serif mt-3 max-w-3xl text-[clamp(2.2rem,5vw,4.4rem)] text-forest">
+          <h2 className="heading-serif-section mt-3 text-forest">
             Understand your cancer type.
             <span className="block italic font-serif">Explore staging, diagnostics & care.</span>
           </h2>
-          <p className="mt-3 max-w-2xl text-[16px] leading-relaxed text-blue-gray">
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-blue-gray">
             Each cancer has distinct biology, testing protocols, and treatment sequences. Filter by category or search by term to find specific guidance.
           </p>
         </Reveal>
@@ -54,7 +54,7 @@ export function CancerExplorerPreview() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by cancer type or symptom (e.g., Breast, Lung, Lymphoma, Colon)..."
-              className="h-14 w-full rounded-2xl border border-forest/15 bg-white-soft px-5 text-[15px] text-forest placeholder-forest/40 outline-none transition-shadow duration-180 focus:border-cobalt focus:shadow-[0_0_0_3px_rgba(47,91,255,0.16)]"
+              className="h-12 w-full rounded-xl border border-forest/15 bg-white-soft px-4 text-[14.5px] text-forest placeholder-forest/40 outline-none transition-shadow duration-180 focus:border-cobalt focus:shadow-[0_0_0_3px_rgba(47,91,255,0.16)]"
             />
             {query && (
               <button
@@ -75,10 +75,10 @@ export function CancerExplorerPreview() {
                 role="option"
                 aria-selected={category === item}
                 onClick={() => setCategory(item)}
-                className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-all duration-180 ${
+                className={`shrink-0 rounded-lg px-3.5 py-1.5 text-[12.5px] font-medium transition-all duration-180 ${
                   category === item
-                    ? "bg-forest text-white-soft shadow-sm"
-                    : "bg-white-soft text-forest/75 hover:bg-white-soft/80 border border-forest/5"
+                    ? "bg-forest text-white-soft shadow-xs"
+                    : "bg-white-soft text-forest/75 hover:bg-white-soft/90 border border-forest/8"
                 }`}
               >
                 {item}
@@ -99,27 +99,27 @@ export function CancerExplorerPreview() {
                 exit={reduce ? undefined : { opacity: 0 }}
                 transition={{ duration: motionTokens.normal, ease: motionTokens.easeOutSoft }}
               >
-                <div className="group flex h-full flex-col justify-between rounded-[28px] border border-forest/8 bg-white-soft p-6 shadow-[var(--shadow-card)] transition-all duration-320 hover:border-cobalt/30 hover:shadow-lg">
+                <div className="group flex h-full flex-col justify-between rounded-xl border border-forest/8 bg-white-soft p-5 shadow-xs transition-all duration-200 hover:border-forest/20">
                   <div>
-                    <span className="label text-warm-gray text-[11px]">{item.category}</span>
-                    <h3 className="mt-2 font-serif text-[1.8rem] leading-tight text-forest group-hover:text-cobalt transition-colors">
+                    <span className="text-meta-ui text-warm-gray">{item.category}</span>
+                    <h3 className="heading-sans-ui mt-1.5 text-[18px] text-forest group-hover:text-teal transition-colors">
                       {item.name}
                     </h3>
-                    <p className="mt-3 text-[14.5px] leading-relaxed text-blue-gray line-clamp-3">
+                    <p className="mt-2.5 text-[13.5px] leading-relaxed text-blue-gray line-clamp-3">
                       {item.summary}
                     </p>
                   </div>
 
                   {/* Next Step Action Buttons */}
-                  <div className="mt-6 border-t border-forest/5 pt-4 space-y-2">
+                  <div className="mt-5 border-t border-forest/6 pt-3 space-y-1.5">
                     <Link
                       href={`/cancer-types/${item.slug}`}
-                      className="flex items-center justify-between text-[13.5px] font-semibold text-teal hover:text-forest transition-colors"
+                      className="flex items-center justify-between text-[13px] font-semibold text-teal hover:text-forest transition-colors"
                     >
                       <span>Open Complete Guide</span>
                       <span>→</span>
                     </Link>
-                    <div className="flex items-center gap-3 text-[12px] text-warm-gray">
+                    <div className="flex items-center gap-2.5 text-[11.5px] text-warm-gray">
                       <Link href="/reports" className="hover:text-forest underline">
                         Decode Reports
                       </Link>
@@ -136,8 +136,8 @@ export function CancerExplorerPreview() {
         </div>
 
         {visible.length === 0 ? (
-          <div className="rounded-[28px] border border-dashed border-forest/20 bg-white-soft p-12 text-center mt-6">
-            <p className="font-serif text-[1.8rem] text-forest">No matching cancer types found</p>
+          <div className="rounded-xl border border-dashed border-forest/20 bg-white-soft p-10 text-center mt-6">
+            <p className="font-serif text-[1.4rem] text-forest">No matching cancer types found</p>
             <p className="mt-2 text-[14px] text-blue-gray">Try a different search keyword or select &quot;All&quot;.</p>
             <button
               type="button"

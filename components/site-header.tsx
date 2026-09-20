@@ -11,7 +11,7 @@ import { motionTokens } from "@/lib/motion";
 const mobileQuickNav = [
   { href: "/", label: "Home", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
   { href: "/dashboard/journey", label: "Journey", icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" },
-  { href: "/ai", label: "AI Guide", isPrimary: true, icon: "M13 10V3L4 14h7v7l9-11h-7z" },
+  { href: "/ai", label: "AI Guide", icon: "M13 10V3L4 14h7v7l9-11h-7z" },
   { href: "/reports", label: "Reports", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
   { href: "/dashboard", label: "Portal", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
 ];
@@ -52,13 +52,13 @@ export function SiteHeader() {
       {/* Top Floating Desktop/Tablet Header */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
         <div
-          className={`pointer-events-auto mx-auto mt-3 w-[min(1240px,calc(100%-24px))] transition-[background-color,box-shadow,border-color,backdrop-filter] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`pointer-events-auto mx-auto mt-2.5 w-[min(1240px,calc(100%-24px))] transition-[background-color,box-shadow,border-color,backdrop-filter] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             floating
-              ? "rounded-full border border-forest/12 bg-[#f6f1e8]/92 shadow-[0_12px_32px_rgba(8,40,40,0.1)] backdrop-blur-xl"
+              ? "rounded-full border border-forest/10 bg-[#f6f1e8]/92 shadow-[0_4px_20px_rgba(8,40,40,0.06)] backdrop-blur-lg"
               : "rounded-full border border-transparent bg-transparent"
           }`}
         >
-          <div className="flex items-center justify-between gap-4 px-4 py-2.5 sm:px-6">
+          <div className="flex items-center justify-between gap-4 px-4 py-2 sm:px-5">
             {/* Logo */}
             <Link
               href="/"
@@ -249,13 +249,13 @@ export function SiteHeader() {
         </AnimatePresence>
       </header>
 
-      {/* Mobile Floating Ergonomic Bottom Bar (Visible on mobile/tablet screens lg:hidden) */}
+      {/* Mobile Floating Restrained Bottom Bar (Visible on mobile/tablet screens lg:hidden) */}
       {!open && (
         <nav
           aria-label="Mobile Quick Navigation"
-          className="fixed inset-x-0 bottom-3 z-40 lg:hidden pointer-events-none px-4"
+          className="fixed inset-x-0 bottom-2.5 z-40 lg:hidden pointer-events-none px-3"
         >
-          <div className="pointer-events-auto mx-auto max-w-md rounded-full border border-forest/12 bg-[#f6f1e8]/95 p-1.5 shadow-[0_12px_32px_rgba(8,40,40,0.18)] backdrop-blur-xl">
+          <div className="pointer-events-auto mx-auto max-w-[340px] rounded-2xl border border-forest/10 bg-[#f6f1e8]/92 p-1 shadow-[0_4px_16px_rgba(8,40,40,0.08)] backdrop-blur-lg">
             <div className="flex items-center justify-around">
               {mobileQuickNav.map((item) => {
                 const isActive = pathname === item.href;
@@ -263,19 +263,17 @@ export function SiteHeader() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`relative flex flex-col items-center justify-center min-w-[56px] min-h-[46px] rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors ${
-                      item.isPrimary
-                        ? "bg-forest text-mint font-semibold shadow-xs"
-                        : isActive
-                          ? "text-forest font-bold"
-                          : "text-forest/65 hover:text-forest"
+                    className={`relative flex flex-col items-center justify-center min-w-[48px] min-h-[40px] rounded-xl px-2 py-0.5 text-[10px] font-medium transition-colors ${
+                      isActive
+                        ? "text-forest font-semibold bg-forest/8"
+                        : "text-forest/70 hover:text-forest hover:bg-forest/4"
                     }`}
                   >
                     <svg
-                      className={`h-4 w-4 ${item.isPrimary ? "stroke-mint" : "stroke-current"}`}
+                      className="h-3.5 w-3.5 stroke-current"
                       fill="none"
                       viewBox="0 0 24 24"
-                      strokeWidth={isActive || item.isPrimary ? 2 : 1.7}
+                      strokeWidth={isActive ? 2.1 : 1.6}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       aria-hidden="true"
@@ -283,8 +281,8 @@ export function SiteHeader() {
                       <path d={item.icon} />
                     </svg>
                     <span className="mt-0.5 tracking-tight">{item.label}</span>
-                    {isActive && !item.isPrimary && (
-                      <span className="absolute -bottom-0.5 h-1 w-1 rounded-full bg-forest" />
+                    {isActive && (
+                      <span className="absolute bottom-0.5 h-1 w-1 rounded-full bg-forest" />
                     )}
                   </Link>
                 );
