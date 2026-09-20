@@ -6,14 +6,16 @@ import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { motionTokens } from "@/lib/motion";
+import { brand } from "@/lib/brand";
 
 export type CompanionState =
   | "idle"
   | "listening"
   | "thinking"
   | "explaining"
+  | "ready"
   | "success"
-  | "concern"
+  | "needs_clinician"
   | "unavailable";
 
 type Msg = {
@@ -27,55 +29,11 @@ type Msg = {
   suggestedFollowUps?: string[];
 };
 
-const taskCategories = [
-  {
-    id: "report",
-    label: "Understand a Report",
-    badge: "Pathology & Staging",
-    prompts: [
-      "Decode pathology report markers (ER, PR, HER2, EGFR)",
-      "What does histological grade 2 mean in my biopsy?",
-      "Explain what TNM staging shorthand (pT2 N0 M0) means",
-    ],
-  },
-  {
-    id: "appointment",
-    label: "Prepare for an Appointment",
-    badge: "Doctor Visit Prep",
-    prompts: [
-      "What questions should I ask my oncologist at my first visit?",
-      "How do I prepare for my upcoming chemotherapy session?",
-      "What records and scans should I bring to a second opinion?",
-    ],
-  },
-  {
-    id: "journey",
-    label: "Understand My Journey",
-    badge: "Treatment Pathways",
-    prompts: [
-      "What is the difference between radiation therapy and chemotherapy?",
-      "How does a multi-disciplinary tumor board make decisions?",
-      "What does systemic targeted therapy versus immunotherapy mean?",
-    ],
-  },
-  {
-    id: "question",
-    label: "Ask a Question",
-    badge: "Clinical Clarification",
-    prompts: [
-      "Explain my diagnosis in simple words",
-      "What support & diet guidelines are safe during treatment?",
-      "How do second opinions work in Indian cancer hospitals?",
-    ],
-  },
-];
-
-const mobileQuickChips = [
+const suggestedPrompts = [
   "Explain my diagnosis",
-  "Questions for doctor",
-  "Understand treatment options",
-  "Decode biopsy markers",
-  "Prepare for scan",
+  "Prepare questions for my doctor",
+  "Help me understand my report",
+  "What happens next?",
 ];
 
 const starterQuestions = [
@@ -92,17 +50,18 @@ const starterQuestions = [
   {
     title: "Understanding next steps",
     desc: "Learn what happens after receiving an initial biopsy diagnosis",
-    prompt: "What are the typical next steps after getting a positive cancer biopsy result?",
+    prompt: "What are the typical next steps after getting a confirmed cancer biopsy result?",
   },
 ];
 
 /**
  * Biological Waveform Thinking State:
- * Serene, clinical, calm waveform animation representing ONCO-AID processing digital care logic.
+ * Serene, clinical, calm waveform animation representing AI processing / understanding.
+ * (Not measuring patient biological vitals - purely digital care understanding)
  */
 function BiologicalWaveformThinking() {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-mint/25 bg-forest-mid/70 p-3.5 text-[13.5px] text-mint shadow-inner">
+    <div className="flex items-center gap-3.5 rounded-xl border border-mint/25 bg-[#042422]/90 p-4 text-[13.5px] text-mint shadow-inner backdrop-blur-md">
       <div className="relative flex h-6 w-16 items-center justify-center shrink-0">
         <svg
           viewBox="0 0 80 28"
@@ -118,14 +77,14 @@ function BiologicalWaveformThinking() {
             className="animate-pulse opacity-90"
           />
         </svg>
-        <span className="absolute right-0.5 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-cyan animate-ping" />
+        <span className="absolute right-0.5 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-mint animate-ping" />
       </div>
       <div className="flex flex-col min-w-0">
         <span className="text-[13px] font-medium text-white-soft truncate">
           Synthesizing plain-language clinical insights...
         </span>
-        <span className="text-[11px] text-white-soft/60 truncate">
-          Consulting validated oncology reference guidelines
+        <span className="text-[11.5px] text-white-soft/60 truncate">
+          Consulting validated oncology reference guidelines (ICMR · NCCN)
         </span>
       </div>
     </div>
@@ -134,15 +93,14 @@ function BiologicalWaveformThinking() {
 
 export function AIInterface() {
   const [input, setInput] = useState("");
-  const [activeTask, setActiveTask] = useState("report");
   const [messages, setMessages] = useState<Msg[]>([
     {
       id: "init-1",
       role: "assistant",
       content:
-        "Welcome to **ONCO-AID AI Guide**.\n\nI am your educational care companion, here to help explain clinical terms, organize questions for your oncology visits, and clarify your milestones in simple, reassuring words.\n\nHow can I support your care journey today?",
+        `Welcome to the **${brand.companion.name}** (${brand.companion.systemName}).\n\nI am your educational care guide, here to help translate complex pathology terms, organize targeted questions for your oncologist visits, and explain care milestones in clear, reassuring language.\n\nHow can I help you understand your care today?`,
       timestamp: "Just now",
-      provider: "ONCO-AID Clinical Assistant",
+      provider: brand.companion.name,
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -163,7 +121,7 @@ export function AIInterface() {
         ? "listening"
         : messages.length > 1
           ? "explaining"
-          : "idle";
+          : "ready";
 
   const handleScroll = useCallback(() => {
     const el = messagesContainerRef.current || mobileContainerRef.current;
@@ -172,7 +130,6 @@ export function AIInterface() {
     isUserScrolledUp.current = scrollHeight - scrollTop - clientHeight > 60;
   }, []);
 
-  // Container-bounded scroll (never scrolls the outer browser window)
   useEffect(() => {
     if (!isUserScrolledUp.current) {
       if (messagesContainerRef.current) {
@@ -228,7 +185,7 @@ export function AIInterface() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: content,
-          taskHint: activeTask,
+          taskHint: "general",
           conversationHistory,
         }),
       });
@@ -278,57 +235,37 @@ export function AIInterface() {
         await navigator.clipboard.writeText(text);
         setCopiedId(id);
         setTimeout(() => setCopiedId(null), 2000);
-      } else if (typeof document !== "undefined") {
-        const textarea = document.createElement("textarea");
-        textarea.value = text;
-        textarea.style.position = "fixed";
-        textarea.style.opacity = "0";
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-        setCopiedId(id);
-        setTimeout(() => setCopiedId(null), 2000);
       }
     } catch {
       // Graceful silence
     }
   }
 
-  const selectedCategoryObj = taskCategories.find((c) => c.id === activeTask) || taskCategories[0];
   const isFreshConversation = messages.length <= 1;
 
   return (
-    <div>
+    <div className="w-full">
       {/* ============================================================ */}
-      {/* MOBILE EXPERIENCE: Purpose-Built Native Companion (md:hidden)*/}
+      {/* MOBILE INTERFACE (md:hidden)                                  */}
       {/* ============================================================ */}
-      <div className="md:hidden flex flex-col rounded-3xl border border-white-soft/15 bg-[#082221] text-white-soft shadow-xl overflow-hidden">
-        {/* Slender Companion Header */}
-        <div className="flex items-center justify-between border-b border-white-soft/10 px-4 py-3.5 bg-forest-mid/50 backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal/20 text-mint border border-mint/20">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm0 18a8 8 0 118-8 8 8 0 01-8 8z" />
-                <path d="M12 6v6l4 2" />
-              </svg>
-            </div>
+      <div className="md:hidden flex flex-col rounded-2xl border border-white-soft/15 bg-[#042422] text-white-soft shadow-xl overflow-hidden mb-20">
+        {/* Companion Header */}
+        <div className="flex items-center justify-between border-b border-white-soft/10 px-4 py-3 bg-[#063B36]">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
             <div>
-              <div className="flex items-center gap-1.5">
-                <h2 className="text-[15px] font-semibold text-white-soft leading-none">
-                  AI Guide
-                </h2>
-                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              </div>
-              <p className="text-[11.5px] text-white-soft/70 mt-0.5">
-                Your care companion
+              <h2 className="text-[14px] font-semibold text-white-soft leading-none">
+                {brand.companion.name}
+              </h2>
+              <p className="text-[11px] text-white-soft/70 mt-0.5">
+                {brand.companion.systemName}
               </p>
             </div>
           </div>
 
-          {/* Biological Waveform Pulsing Badge */}
-          <div className="flex items-center gap-1.5 rounded-full border border-mint/20 bg-forest/80 px-2.5 py-1 text-[11px] text-mint">
-            <svg viewBox="0 0 32 14" fill="none" className="h-3 w-7 stroke-mint">
+          {/* Biological Waveform Companion State Badge */}
+          <div className="flex items-center gap-1.5 rounded-full border border-mint/25 bg-white-soft/8 px-2.5 py-1 text-[11px] text-mint">
+            <svg viewBox="0 0 32 14" fill="none" className="h-3 w-6 stroke-mint" aria-hidden="true">
               <path
                 d="M 1 7 Q 6 7 9 7 T 13 2 T 18 12 T 23 7 T 27 4 L 31 7"
                 strokeWidth="1.8"
@@ -336,23 +273,23 @@ export function AIInterface() {
                 className={companionState === "thinking" ? "animate-pulse" : ""}
               />
             </svg>
-            <span className="capitalize text-[10.5px] font-medium">
-              {companionState === "thinking" ? "Thinking" : "Ready"}
+            <span className="capitalize text-[10.5px] font-semibold text-white-soft/90">
+              {companionState}
             </span>
           </div>
         </div>
 
-        {/* Horizontal Quick Prompt Chips */}
-        <div className="border-b border-white-soft/8 bg-forest-mid/30 px-3 py-2">
+        {/* Horizontal Suggested Prompt Chips */}
+        <div className="border-b border-white-soft/8 bg-[#031d1b] px-3 py-2">
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-            {mobileQuickChips.map((chip, cIdx) => (
+            {suggestedPrompts.map((prompt, idx) => (
               <button
-                key={cIdx}
+                key={idx}
                 type="button"
-                onClick={() => void send(chip)}
-                className="shrink-0 rounded-full border border-white-soft/12 bg-white-soft/6 px-3 py-1 text-[12px] font-medium text-white-soft/90 active:bg-mint/20 active:border-mint transition-all"
+                onClick={() => void send(prompt)}
+                className="shrink-0 rounded-full border border-white-soft/15 bg-white-soft/8 px-3 py-1 text-[12px] font-medium text-white-soft active:bg-mint/20 active:border-mint transition-all"
               >
-                {chip}
+                {prompt}
               </button>
             ))}
           </div>
@@ -362,7 +299,7 @@ export function AIInterface() {
         <div
           ref={mobileContainerRef}
           onScroll={handleScroll}
-          className="flex-1 max-h-[52vh] min-h-[320px] overflow-y-auto p-4 space-y-4 scroll-smooth"
+          className="flex-1 max-h-[50vh] min-h-[300px] overflow-y-auto p-4 space-y-4 scroll-smooth bg-[#042422]"
         >
           {messages.map((msg) => (
             <div
@@ -370,29 +307,26 @@ export function AIInterface() {
               className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
             >
               <div className="flex items-center gap-1.5 mb-1 px-1">
-                <span className="text-[10.5px] text-white-soft/50">
-                  {msg.role === "user" ? "You" : "AI Guide"}
+                <span className="text-[11px] text-white-soft/50 font-medium">
+                  {msg.role === "user" ? "You" : brand.companion.name}
                 </span>
                 <span className="text-[10px] text-white-soft/30">• {msg.timestamp}</span>
               </div>
 
               <div
-                className={`group relative max-w-[90%] rounded-2xl p-3.5 text-[14px] ${
+                className={`group relative max-w-[92%] rounded-xl p-3.5 text-[14px] leading-relaxed ${
                   msg.role === "user"
-                    ? "bg-forest-mid text-white border border-white-soft/20 rounded-tr-xs"
-                    : "border border-forest/20 bg-ivory text-ink rounded-tl-xs shadow-xs"
+                    ? "bg-[#0A4E47] text-white-soft border border-mint/20"
+                    : "border border-white-soft/12 bg-white-soft/[0.07] text-white-soft/95 shadow-xs"
                 }`}
               >
-                {/* Assistant has dark text on light ivory background for maximum readability */}
-                <div className={msg.role === "assistant" ? "text-ink" : "text-white"}>
-                  <MarkdownRenderer content={msg.content} />
-                </div>
+                <MarkdownRenderer content={msg.content} />
 
                 {/* Follow-up suggestions */}
                 {msg.suggestedFollowUps && msg.suggestedFollowUps.length > 0 && (
-                  <div className="mt-3 border-t border-ink/10 pt-2.5">
-                    <p className="text-[10.5px] font-bold uppercase tracking-wider text-teal mb-1.5">
-                      Recommended Next Questions
+                  <div className="mt-3 border-t border-white-soft/10 pt-2">
+                    <p className="text-[10.5px] font-bold uppercase tracking-wider text-mint mb-1.5">
+                      Suggested Follow-Ups
                     </p>
                     <div className="flex flex-col gap-1.5">
                       {msg.suggestedFollowUps.map((fu, fIdx) => (
@@ -400,7 +334,7 @@ export function AIInterface() {
                           key={fIdx}
                           type="button"
                           onClick={() => void send(fu)}
-                          className="rounded-lg bg-forest/5 p-2 text-left text-[12px] text-forest font-medium hover:bg-forest/10 transition-colors"
+                          className="rounded-md bg-white-soft/6 p-2 text-left text-[12px] text-white-soft hover:bg-white-soft/12 transition-colors"
                         >
                           {fu} →
                         </button>
@@ -409,16 +343,16 @@ export function AIInterface() {
                   </div>
                 )}
 
-                {/* Assistant footer with Copy */}
+                {/* Assistant Footer */}
                 {msg.role === "assistant" && (
-                  <div className="mt-2.5 flex items-center justify-between border-t border-ink/10 pt-2 text-[11.5px] text-ink/50">
-                    <span>ONCO-AID Guide</span>
+                  <div className="mt-2.5 flex items-center justify-between border-t border-white-soft/10 pt-2 text-[11px] text-white-soft/45">
+                    <span>{brand.name} · Educational</span>
                     <button
                       type="button"
                       onClick={() => handleCopy(msg.id, msg.content)}
-                      className="text-teal hover:underline font-medium"
+                      className="text-mint hover:underline font-medium"
                     >
-                      {copiedId === msg.id ? "Copied ✓" : "Copy"}
+                      {copiedId === msg.id ? "Copied ✓" : "Copy note"}
                     </button>
                   </div>
                 )}
@@ -426,18 +360,18 @@ export function AIInterface() {
             </div>
           ))}
 
-          {/* Empty state suggested questions if conversation just started */}
+          {/* Starter Inquiries if Fresh */}
           {isFreshConversation && (
             <div className="pt-2 space-y-2">
               <p className="text-[11px] font-bold uppercase tracking-wider text-white-soft/50 px-1">
-                Suggested Starting Inquiries
+                Suggested Questions
               </p>
               {starterQuestions.map((sq, sIdx) => (
                 <button
                   key={sIdx}
                   type="button"
                   onClick={() => void send(sq.prompt)}
-                  className="w-full text-left rounded-2xl border border-white-soft/12 bg-white-soft/5 p-3 hover:bg-white-soft/10 active:scale-[0.99] transition-all"
+                  className="w-full text-left rounded-lg border border-white-soft/12 bg-white-soft/5 p-3 hover:bg-white-soft/10 transition-all"
                 >
                   <span className="text-[13px] font-semibold text-mint block">
                     {sq.title}
@@ -450,11 +384,11 @@ export function AIInterface() {
             </div>
           )}
 
-          {loading ? <BiologicalWaveformThinking /> : null}
+          {loading && <BiologicalWaveformThinking />}
         </div>
 
-        {/* Pinned Bottom Input Bar (Keyboard-Safe) */}
-        <div className="border-t border-white-soft/10 bg-forest-mid/60 p-3 backdrop-blur-md">
+        {/* Mobile Composer */}
+        <div className="border-t border-white-soft/10 bg-[#031d1b] p-3">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -462,178 +396,129 @@ export function AIInterface() {
             }}
             className="flex items-center gap-2"
           >
-            {/* Attachment Button (links to reports/upload) */}
             <Link
               href="/reports"
               aria-label="Upload report or view documents"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white-soft/15 bg-white-soft/8 text-white-soft/80 active:bg-white-soft/20"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white-soft/15 bg-white-soft/8 text-white-soft/80"
             >
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
               </svg>
             </Link>
 
-            {/* Input field */}
-            <div className="relative flex-1">
-              <input
-                id="ai-mobile-input"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={loading}
-                className="h-11 w-full rounded-xl border border-white-soft/15 bg-white-soft/10 pl-3.5 pr-3 text-[14px] text-white-soft placeholder-white-soft/40 outline-none focus:border-mint"
-                placeholder="Ask anything about your care..."
-              />
-            </div>
+            <input
+              id="ai-mobile-input"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
+              className="h-11 flex-1 rounded-lg border border-white-soft/15 bg-white-soft/10 px-3.5 text-[14px] text-white-soft placeholder-white-soft/40 outline-none focus:border-mint"
+              placeholder="Ask anything about your care..."
+            />
 
-            {/* Send button */}
             <Button
               type="submit"
               variant="coral"
               disabled={loading || !input.trim()}
-              className="h-11 px-4 text-[13.5px] rounded-xl font-medium shrink-0"
+              className="h-11 px-4 text-[13px] rounded-lg font-semibold shrink-0"
             >
               {loading ? "..." : "Send"}
             </Button>
           </form>
 
           <p className="text-center text-[10.5px] text-white-soft/45 mt-2">
-            Educational companion · Non-diagnostic · Review with your doctor
+            Non-diagnostic educational guidance · Review with your doctor
           </p>
         </div>
       </div>
 
       {/* ============================================================ */}
-      {/* DESKTOP EXPERIENCE: Editorial Full Interface (hidden on md)  */}
+      {/* DESKTOP INTERFACE (hidden on mobile)                          */}
       {/* ============================================================ */}
-      <div className="hidden md:block relative overflow-hidden rounded-[32px] border border-white-soft/14 bg-[#082221] p-8 text-white-soft shadow-[var(--shadow-card)]">
-        {/* Top Header with Companion State & Clinical Status */}
+      <div className="hidden md:block relative overflow-hidden rounded-2xl border border-white-soft/15 bg-[#042422]/95 p-8 text-white-soft shadow-[0_20px_50px_rgba(2,16,14,0.4)] backdrop-blur-md">
+        {/* Header with Companion State and Biological Waveform */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white-soft/10 pb-5">
           <div>
-            <div className="flex items-center gap-2.5">
-              <h2 className="text-[17px] font-semibold text-white-soft">
-                ONCO-AID Clinical Assistant
+            <div className="flex items-center gap-3">
+              <h2 className="text-[18px] font-semibold text-white-soft">
+                {brand.companion.name}
               </h2>
+              <span className="text-white-soft/40">·</span>
+              <span className="text-[13px] text-mint font-mono">{brand.companion.systemName}</span>
               <span
-                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border ${
                   companionState === "thinking"
-                    ? "bg-cyan/20 text-cyan border border-cyan/40"
-                    : companionState === "listening"
-                      ? "bg-mint/20 text-mint border border-mint/40"
-                      : companionState === "unavailable"
-                        ? "bg-rose-500/20 text-rose-300 border border-rose-400/30"
-                        : "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
+                    ? "bg-mint/20 text-mint border-mint/40"
+                    : "bg-emerald-500/20 text-emerald-300 border-emerald-400/30"
                 }`}
               >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    companionState === "thinking"
-                      ? "bg-cyan animate-ping"
-                      : companionState === "listening"
-                        ? "bg-mint animate-pulse"
-                        : companionState === "unavailable"
-                          ? "bg-rose-400"
-                          : "bg-emerald-400 animate-pulse"
-                  }`}
-                />
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="capitalize">{companionState}</span>
               </span>
             </div>
             <p className="mt-1 text-[13.5px] text-white-soft/75">
-              Understand medical terms, prepare questions for your care team, and make sense of your next steps.
+              {brand.companion.tagline}
             </p>
           </div>
 
-          {/* Clinical Safety Notice */}
-          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-[12px] text-amber-200 font-medium">
+          <div className="rounded border border-white-soft/15 bg-white-soft/6 px-3.5 py-1.5 text-[12px] text-white-soft/70">
             Notice: Educational guidance only · Non-diagnostic
           </div>
         </div>
 
-        {/* 4 Task Category Selector Tabs */}
-        <div className="mt-6">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-white-soft/50 block mb-2">
-            Select Clinical Task
-          </label>
-          <div className="grid grid-cols-4 gap-2">
-            {taskCategories.map((cat) => {
-              const isSelected = activeTask === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setActiveTask(cat.id)}
-                  className={`rounded-2xl p-3 text-left transition-all duration-200 border ${
-                    isSelected
-                      ? "border-mint/60 bg-forest-mid text-white-soft shadow-sm"
-                      : "border-white-soft/10 bg-white-soft/5 text-white-soft/70 hover:bg-white-soft/10 hover:text-white-soft"
-                  }`}
-                >
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-mint">
-                    {cat.badge}
-                  </span>
-                  <span className="mt-1 block text-[14px] font-medium leading-snug">
-                    {cat.label}
-                  </span>
-                </button>
-              );
-            })}
+        {/* Suggested Prompts Row */}
+        <div className="mt-5">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-white-soft/50 block mb-2">
+            Suggested Prompts
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {suggestedPrompts.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => void send(item)}
+                className="group flex items-center gap-2 rounded-md border border-white-soft/12 bg-white-soft/5 px-3.5 py-2 text-[13px] text-white-soft/85 transition-all hover:border-mint/40 hover:bg-white-soft/10 text-left"
+              >
+                <span>{item}</span>
+                <span className="text-mint opacity-0 transition-opacity group-hover:opacity-100">→</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Suggested prompts for active task */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {selectedCategoryObj.prompts.map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => void send(item)}
-              className="group flex items-center gap-2 rounded-xl border border-white-soft/10 bg-white-soft/5 px-3.5 py-2 text-[13px] text-white-soft/85 transition-all hover:border-mint/40 hover:bg-white-soft/10 text-left"
-            >
-              <span>{item}</span>
-              <span className="text-mint opacity-0 transition-opacity group-hover:opacity-100">→</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Chat Messages Feed Container */}
+        {/* Chat Feed */}
         <div
           ref={messagesContainerRef}
           onScroll={handleScroll}
-          className="mt-6 max-h-[460px] min-h-[240px] overflow-y-auto space-y-4 pr-1 scroll-smooth"
+          className="mt-6 max-h-[480px] min-h-[260px] overflow-y-auto space-y-4 pr-1 scroll-smooth"
         >
           {messages.map((msg) => (
             <motion.div
               key={msg.id}
-              initial={reduce ? false : { opacity: 0, y: 10 }}
+              initial={reduce ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: motionTokens.fast, ease: motionTokens.easeOutSoft }}
               className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
             >
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[11px] text-white-soft/50">
-                  {msg.role === "user" ? "You" : "ONCO-AID Guide"}
+                <span className="text-[11px] text-white-soft/50 font-medium">
+                  {msg.role === "user" ? "You" : brand.companion.name}
                 </span>
                 <span className="text-[11px] text-white-soft/35">• {msg.timestamp}</span>
-                {msg.cached && (
-                  <span className="text-[10px] text-cyan/75 rounded bg-cyan/10 px-1.5 py-0.5 uppercase tracking-wider font-semibold">
-                    Cached
-                  </span>
-                )}
               </div>
               <div
-                className={`group relative max-w-[85%] rounded-2xl p-4 ${
+                className={`group relative max-w-[88%] rounded-xl p-4.5 text-[14.5px] leading-relaxed ${
                   msg.role === "user"
-                    ? "bg-forest-mid text-white-soft border border-white-soft/15"
-                    : "border border-white-soft/10 bg-white-soft/8 text-white-soft/95"
+                    ? "bg-[#0A4E47] text-white-soft border border-mint/25"
+                    : "border border-white-soft/12 bg-white-soft/[0.06] text-white-soft/95 shadow-sm"
                 }`}
               >
                 <MarkdownRenderer content={msg.content} />
 
-                {/* Follow-up Prompts if returned */}
+                {/* Suggested follow-ups */}
                 {msg.suggestedFollowUps && msg.suggestedFollowUps.length > 0 && (
                   <div className="mt-4 border-t border-white-soft/10 pt-3">
                     <p className="text-[11px] font-bold uppercase tracking-wider text-mint mb-2">
-                      Related follow-ups
+                      Related Follow-Ups
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {msg.suggestedFollowUps.map((fu, fIdx) => (
@@ -641,7 +526,7 @@ export function AIInterface() {
                           key={fIdx}
                           type="button"
                           onClick={() => void send(fu)}
-                          className="rounded-lg border border-white-soft/12 bg-white-soft/6 px-2.5 py-1 text-[12px] text-white-soft/80 hover:bg-white-soft/12 hover:text-white-soft transition-colors"
+                          className="rounded-md border border-white-soft/12 bg-white-soft/6 px-2.5 py-1 text-[12px] text-white-soft/80 hover:bg-white-soft/12 hover:text-white-soft transition-colors"
                         >
                           {fu} →
                         </button>
@@ -650,10 +535,9 @@ export function AIInterface() {
                   </div>
                 )}
 
-                {/* Assistant Message Footer */}
                 {msg.role === "assistant" && (
                   <div className="mt-3 flex items-center justify-between border-t border-white-soft/10 pt-2 text-[12px] text-white-soft/40">
-                    <span className="text-[11px] italic">{msg.provider || "ONCO-AID"}</span>
+                    <span className="text-[11px] italic">{brand.name} · Clinical Guidance</span>
                     <button
                       type="button"
                       onClick={() => handleCopy(msg.id, msg.content)}
@@ -667,10 +551,10 @@ export function AIInterface() {
             </motion.div>
           ))}
 
-          {loading ? <BiologicalWaveformThinking /> : null}
+          {loading && <BiologicalWaveformThinking />}
         </div>
 
-        {/* Input Form */}
+        {/* Desktop Input Composer */}
         <form
           className="mt-6"
           onSubmit={(e) => {
@@ -684,21 +568,21 @@ export function AIInterface() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={loading}
-              className="h-14 w-full rounded-2xl border border-white-soft/15 bg-white-soft/8 pl-5 pr-28 text-[15px] text-white-soft placeholder-white-soft/40 outline-none transition-all focus:border-mint focus:shadow-[0_0_0_2px_rgba(215,236,227,0.2)]"
-              placeholder="Ask a question or enter a term from your notes..."
+              className="h-13 w-full rounded-xl border border-white-soft/15 bg-white-soft/8 pl-5 pr-28 text-[14.5px] text-white-soft placeholder-white-soft/40 outline-none transition-all focus:border-mint focus:shadow-[0_0_0_2px_rgba(127,212,208,0.2)]"
+              placeholder="Ask anything about your diagnosis, biopsy terms, or next steps..."
             />
             <Button
               type="submit"
               variant="coral"
-              className="absolute right-2 top-2 bottom-2 px-5 py-0 h-10 text-[14px]"
+              className="absolute right-2 top-2 bottom-2 px-5 py-0 h-9 text-[13.5px] font-semibold"
               disabled={loading || !input.trim()}
             >
-              {loading ? "Sending..." : "Ask AI"}
+              {loading ? "Sending..." : "Ask Companion"}
             </Button>
           </div>
         </form>
 
-        {/* Safety Notice */}
+        {/* Bottom Safety Links */}
         <div className="mt-4 flex flex-wrap items-center justify-between text-[12px] text-white-soft/50 gap-2">
           <p>
             Educational guidance only. Always review pathology and treatment options with your oncologist.

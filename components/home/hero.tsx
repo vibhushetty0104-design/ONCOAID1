@@ -1,123 +1,183 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
-import { site } from "@/lib/utils";
+import { brand } from "@/lib/brand";
+import { CareSignal, MobileCareSignal } from "@/components/home/care-signal";
+import { useReducedMotion } from "motion/react";
 
 export function HomeHero() {
   const reduce = useReducedMotion();
 
+  // Typing animation state:
+  // Step 0: "ONCO—AID"
+  // Step 1: pause
+  // Step 2: "Cancer care,"
+  // Step 3: pause
+  // Step 4: "made clearer."
+  // Step 5: completed (cursor fades, content reveals)
+  const [typedTitle1, setTypedTitle1] = useState("");
+  const [typedTitle2, setTypedTitle2] = useState("");
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [cursorVisible, setCursorVisible] = useState(true);
+
+  useEffect(() => {
+    if (reduce) {
+      setTypedTitle1("Cancer care,");
+      setTypedTitle2("made clearer.");
+      setIsTypingComplete(true);
+      setCursorVisible(false);
+      return;
+    }
+
+    const line1 = "Cancer care,";
+    const line2 = "made clearer.";
+    let currentIndex = 0;
+    let timer: NodeJS.Timeout;
+
+    // Type line 1
+    const typeLine1 = () => {
+      if (currentIndex <= line1.length) {
+        setTypedTitle1(line1.slice(0, currentIndex));
+        currentIndex++;
+        timer = setTimeout(typeLine1, 45);
+      } else {
+        // Pause between line 1 and line 2
+        currentIndex = 0;
+        timer = setTimeout(typeLine2, 280);
+      }
+    };
+
+    // Type line 2
+    const typeLine2 = () => {
+      if (currentIndex <= line2.length) {
+        setTypedTitle2(line2.slice(0, currentIndex));
+        currentIndex++;
+        timer = setTimeout(typeLine2, 45);
+      } else {
+        // Complete
+        timer = setTimeout(() => {
+          setIsTypingComplete(true);
+          setCursorVisible(false);
+        }, 350);
+      }
+    };
+
+    // Initial slight pause before typing starts
+    timer = setTimeout(typeLine1, 200);
+
+    return () => clearTimeout(timer);
+  }, [reduce]);
+
   return (
-    <section className="relative overflow-hidden bg-ivory text-forest pt-28 sm:pt-32 md:pt-36 pb-16 sm:pb-20 md:pb-24">
+    <section className="relative overflow-hidden bg-[#063B36] text-white-soft pt-28 pb-20 md:pt-36 md:pb-28 border-b border-white-soft/10">
+      {/* Subtle Ambient Radial Lighting */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-40 left-1/4 h-[500px] w-[500px] rounded-full bg-emerald-500/10 blur-[120px]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 right-10 h-[400px] w-[400px] rounded-full bg-[#E88970]/8 blur-[140px]"
+      />
+
       <div className="container-page relative z-10">
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
-          {/* Left: Editorial Narrative */}
-          <div className="max-w-2xl">
-            {/* Eyebrow */}
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <span className="text-[11px] md:text-[12px] font-semibold uppercase tracking-[0.24em] text-warm-gray">
-                CANCER CARE · BENGALURU
+        <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          {/* Left Column: Brand, Editorial Typing Headline, Copy & CTAs */}
+          <div className="flex flex-col">
+            {/* Centralized Brand Eyebrow */}
+            <div className="flex items-center gap-2 text-mint font-semibold text-[11.5px] tracking-[0.2em] uppercase">
+              <span>{brand.name}</span>
+              <span className="text-white-soft/40">·</span>
+              <span className="text-white-soft/75 tracking-widest">{brand.launchCity.toUpperCase()}</span>
+            </div>
+
+            {/* Editorial Serif Headline with Precise Typing Animation */}
+            <h1 className="editorial-serif mt-4 text-[2.85rem] sm:text-[3.6rem] md:text-[4.2rem] lg:text-[4.5rem] leading-[1.08] tracking-tight text-white-soft min-h-[2.3em]">
+              <span className="block">{typedTitle1 || (reduce ? "Cancer care," : "")}</span>
+              <span className="block text-mint-soft">
+                {typedTitle2 || (reduce ? "made clearer." : "")}
+                {cursorVisible && (
+                  <span className="inline-block w-[3px] h-[0.85em] align-baseline bg-mint ml-1 animate-pulse" />
+                )}
               </span>
-            </motion.div>
+            </h1>
 
-            {/* Headline */}
-            <motion.h1
-              className="editorial-serif mt-5 text-[clamp(2.6rem,6.8vw,4.8rem)] leading-[1.04] text-forest font-normal tracking-tight"
-              initial={reduce ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            {/* Supporting Copy (Revealed smoothly) */}
+            <div
+              className={`transition-opacity duration-700 mt-6 max-w-xl ${
+                isTypingComplete || reduce ? "opacity-100" : "opacity-0"
+              }`}
             >
-              Cancer care,
-              <span className="block italic text-forest/90">made clearer.</span>
-            </motion.h1>
+              <div className="space-y-1 text-[16px] sm:text-[17.5px] font-normal text-white-soft/85 leading-relaxed">
+                <p>Understand your diagnosis.</p>
+                <p>Find the right care.</p>
+                <p>Know what comes next.</p>
+              </div>
 
-            {/* Supporting 3-line message */}
-            <motion.p
-              className="mt-6 text-[16px] sm:text-[17.5px] md:text-[19px] text-blue-gray font-sans leading-relaxed"
-              initial={reduce ? false : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            >
-              Understand your diagnosis.<br />
-              Find the right care.<br />
-              Know what comes next.
-            </motion.p>
+              <p className="mt-4 text-[14px] text-white-soft/65 leading-relaxed">
+                A calm, clinical navigation platform for patients and families across Bengaluru and India. Grounded in ICMR and NCCN oncology consensus guidelines.
+              </p>
 
-            {/* Single Primary CTA */}
-            <motion.div
-              className="mt-8 flex items-center gap-4"
-              initial={reduce ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Link
-                href="/care"
-                className="inline-flex items-center gap-2.5 rounded-full bg-forest px-7 py-3.5 text-[14.5px] font-medium text-white shadow-xs hover:bg-forest-mid active:scale-[0.99] transition-all"
-              >
-                <span>Start here</span>
-                <span aria-hidden="true">→</span>
-              </Link>
-            </motion.div>
+              {/* Mobile-only Care Signal placement (ordered per specification) */}
+              <div className="mt-7 lg:hidden">
+                <MobileCareSignal />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/care/diagnosed"
+                  className="inline-flex items-center justify-center rounded-md bg-[#E88970] px-6 py-3.5 text-[14px] font-semibold text-[#042422] shadow-sm transition-all hover:bg-[#eb967f] hover:translate-x-0.5"
+                >
+                  <span>Start here →</span>
+                </Link>
+
+                <Link
+                  href="/reports"
+                  className="inline-flex items-center justify-center rounded-md border border-white-soft/25 bg-white-soft/[0.08] px-5 py-3.5 text-[14px] font-medium text-white-soft backdrop-blur-xs transition-colors hover:border-white-soft/50 hover:bg-white-soft/15"
+                >
+                  Decode a Report
+                </Link>
+              </div>
+
+              {/* Small Immediate Starting Points */}
+              <div className="mt-8 border-t border-white-soft/12 pt-4">
+                <span className="text-[11px] uppercase tracking-[0.14em] text-white-soft/50 block mb-2 font-medium">
+                  Immediate starting points:
+                </span>
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-white-soft/75">
+                  <Link
+                    href="/reports"
+                    className="hover:text-mint hover:underline underline-offset-4 transition-colors"
+                  >
+                    Biopsy & Pathology Report →
+                  </Link>
+                  <Link
+                    href="/specialists"
+                    className="hover:text-mint hover:underline underline-offset-4 transition-colors"
+                  >
+                    Specialists in Bengaluru →
+                  </Link>
+                  <Link
+                    href="/journey"
+                    className="hover:text-mint hover:underline underline-offset-4 transition-colors"
+                  >
+                    8-Stage Care Pathway →
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Right: Subtle Care Signal Signature (Calm & Alive) */}
-          <motion.div
-            className="relative hidden lg:flex flex-col items-center justify-center p-6"
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            aria-hidden="true"
+          {/* Right Column: Desktop Living Care Signal (Restored & Enhanced) */}
+          <div
+            className={`hidden lg:block transition-opacity duration-700 ${
+              isTypingComplete || reduce ? "opacity-100" : "opacity-0"
+            }`}
           >
-            <div className="w-full max-w-md relative">
-              <svg viewBox="0 0 400 120" fill="none" className="w-full h-28 overflow-visible">
-                <defs>
-                  <linearGradient id="heroSignalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#082828" stopOpacity="0.12" />
-                    <stop offset="40%" stopColor="#2A6D65" stopOpacity="0.7" />
-                    <stop offset="70%" stopColor="#E06D53" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="#082828" stopOpacity="0.1" />
-                  </linearGradient>
-
-                  <radialGradient id="heroDotGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#FFA085" stopOpacity="1" />
-                    <stop offset="50%" stopColor="#E06D53" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#E06D53" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-
-                {/* Subtle base wave */}
-                <path
-                  d="M 0 60 C 50 60, 80 30, 140 30 C 200 30, 230 85, 290 85 C 340 85, 370 60, 400 60"
-                  stroke="rgba(8, 40, 40, 0.08)"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-
-                {/* Flowing Care Signal line */}
-                <path
-                  d="M 0 60 C 50 60, 80 30, 140 30 C 200 30, 230 85, 290 85 C 340 85, 370 60, 400 60"
-                  stroke="url(#heroSignalGrad)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-
-                {/* Quiet pulsing signal marker */}
-                <g transform="translate(250, 78)">
-                  <circle r="10" fill="url(#heroDotGlow)" className="animate-pulse opacity-70" />
-                  <circle r="3" fill="#FFFDF8" />
-                  <circle r="1.5" fill="#E06D53" />
-                </g>
-              </svg>
-
-              <p className="text-center text-[11px] uppercase tracking-[0.24em] text-warm-gray/60 mt-3 font-medium">
-                CARE SIGNAL · CLINICAL ORIENTATION
-              </p>
-            </div>
-          </motion.div>
+            <CareSignal />
+          </div>
         </div>
       </div>
     </section>

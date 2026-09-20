@@ -3,189 +3,226 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { pathways } from "@/lib/data";
-import { Button } from "@/components/ui/button";
+import { patientJourneyStages, type JourneyStage } from "@/lib/demo-patient";
 import { Reveal } from "@/components/reveal";
-import { motionTokens } from "@/lib/motion";
-
-const icons: Record<string, React.ReactNode> = {
-  questions: (
-    <path d="M12 18h.01M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2.5-3 5" stroke="currentColor" strokeWidth="1.4" />
-  ),
-  diagnosed: (
-    <path d="M5 12h14M12 5v14" stroke="currentColor" strokeWidth="1.4" />
-  ),
-  preparing: (
-    <path d="M4 7h16M4 12h10M4 17h7" stroke="currentColor" strokeWidth="1.4" />
-  ),
-  treatment: (
-    <circle cx="12" cy="12" r="7" stroke="currentColor" strokeWidth="1.4" />
-  ),
-  supporting: (
-    <path d="M8 14c0-2 2-4 4-4s4 2 4 4M9 9a3 3 0 1 1 6 0" stroke="currentColor" strokeWidth="1.4" />
-  ),
-  specialist: (
-    <path d="M8 19v-2a4 4 0 0 1 8 0v2M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" strokeWidth="1.4" />
-  ),
-  report: (
-    <path d="M7 4h7l5 5v11H7V4Z M14 4v5h5" stroke="currentColor" strokeWidth="1.4" />
-  ),
-};
 
 export function PatientJourney() {
-  const [active, setActive] = useState<string>(pathways[1].slug);
   const reduce = useReducedMotion();
-  const selected = pathways.find((p) => p.slug === active) ?? pathways[0];
+  // Stage 03 is the current "Active" demo stage (Pathology & Diagnosis)
+  const [activeStageId, setActiveStageId] = useState<string>("03");
 
   return (
-    <section id="journey" className="bg-ivory py-20 md:py-28">
+    <section id="journey" className="border-b border-forest/10 bg-[#EDF4EF] py-20 md:py-28 text-forest">
       <div className="container-page">
         <Reveal>
-          <p className="label text-teal">Patient Navigation</p>
-          <h2 className="heading-serif-section mt-3 text-forest">
-            Know what comes next.
-          </h2>
-          <p className="mt-3 max-w-2xl text-[15.5px] leading-relaxed text-blue-gray">
-            Cancer care can feel like a series of unfamiliar decisions. ONCO-AID helps you understand where you are, what comes next, and what to discuss with your care team.
-          </p>
+          <div className="max-w-2xl">
+            <span className="text-[12px] font-semibold tracking-[0.18em] uppercase text-forest/70 block">
+              Patient Care Pathway · 8 Clinical Milestones
+            </span>
+            <h2 className="heading-serif-section mt-2 text-forest">
+              A continuous path from confusion to recovery.
+            </h2>
+            <p className="mt-3 text-[15.5px] leading-relaxed text-forest/80">
+              Cancer care unfolds across sequential stages. ONCO—AID maps each milestone so you know what questions to ask, what records to bring, and what comes next.
+            </p>
+          </div>
         </Reveal>
 
-        {/* Mobile View: Editorial Guided Pathway Stream (De-cardified) */}
-        <div className="mt-10 flex flex-col lg:hidden border-b border-forest/10">
-          {pathways.map((item) => {
-            const isExpanded = item.slug === active;
-            return (
-              <div
-                key={item.slug}
-                className="border-t border-forest/10 transition-colors"
-              >
-                <button
-                  type="button"
-                  onClick={() => setActive(isExpanded ? "" : item.slug)}
-                  aria-expanded={isExpanded}
-                  className="flex w-full items-center justify-between py-4 text-left transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-[12px] font-bold text-coral w-6">{item.number}</span>
-                    <span className="text-forest/70">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        {icons[item.slug]}
-                      </svg>
-                    </span>
-                    <span className="font-serif text-[18px] font-medium text-forest">
-                      {item.title}
-                    </span>
-                  </div>
-                  <span
-                    className={`text-[13px] text-forest/60 transition-transform duration-200 ${
-                      isExpanded ? "rotate-90 text-coral font-bold" : ""
-                    }`}
-                  >
-                    →
-                  </span>
-                </button>
-
-                {/* Inline Expanded Details */}
-                <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.div
-                      key="content"
-                      initial={reduce ? false : { height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={reduce ? undefined : { height: 0, opacity: 0 }}
-                      transition={{ duration: motionTokens.normal, ease: motionTokens.easeOutSoft }}
-                      className="pb-5 pt-1 pl-9 pr-2"
-                    >
-                      <p className="text-[14px] leading-relaxed text-blue-gray">
-                        {item.description}
-                      </p>
-                      <div className="mt-3.5">
-                        <Link
-                          href={item.href}
-                          className="inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-teal hover:text-forest transition-colors"
-                        >
-                          <span>Enter this pathway</span>
-                          <span>→</span>
-                        </Link>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+        {/* Legend for Journey States */}
+        <div className="mt-8 flex flex-wrap items-center gap-5 text-[12.5px] text-forest/75">
+          <div className="flex items-center gap-2">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white-soft">
+              ✓
+            </span>
+            <span>Completed milestones</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#E88970] text-[10px] font-bold text-[#042422] animate-pulse">
+              ●
+            </span>
+            <span className="font-semibold text-forest">Current stage (You are here)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full border border-forest/30 bg-forest/10 text-[10px] text-forest/50">
+              ○
+            </span>
+            <span>Upcoming milestones</span>
+          </div>
         </div>
 
-        {/* Desktop View: Interactive Split-View Stream */}
-        <div className="mt-14 hidden lg:grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)]">
-          <ul className="flex flex-col border-b border-forest/10">
-            {pathways.map((item) => {
-              const isActive = item.slug === active;
+        {/* Living Vertical Pathway with One Continuous Line */}
+        <div className="relative mt-12 pl-6 sm:pl-10 md:pl-12">
+          {/* Continuous Vertical Timeline Line */}
+          <div
+            aria-hidden="true"
+            className="absolute left-[18px] sm:left-[26px] md:left-[30px] top-6 bottom-6 w-[2px] bg-gradient-to-b from-emerald-600 via-[#E88970] to-forest/20"
+          />
+
+          <div className="space-y-6">
+            {patientJourneyStages.map((stage: JourneyStage) => {
+              const isCompleted = stage.status === "completed";
+              const isCurrent = stage.id === "03"; // Stage 03 is current active
+              const isExpanded = activeStageId === stage.id;
+
               return (
-                <li key={item.slug}>
+                <div
+                  key={stage.id}
+                  className={`group relative rounded-lg border transition-all duration-200 ${
+                    isCurrent
+                      ? "border-[#E88970]/60 bg-white-soft shadow-sm ring-1 ring-[#E88970]/30"
+                      : isExpanded
+                        ? "border-forest/25 bg-white-soft shadow-xs"
+                        : "border-forest/12 bg-white-soft/80 hover:border-forest/25 hover:bg-white-soft"
+                  }`}
+                >
+                  {/* Milestone Node on the Continuous Line */}
+                  <div
+                    className={`absolute -left-[30px] sm:-left-[38px] md:-left-[42px] top-6 z-10 flex h-7 w-7 items-center justify-center rounded-full font-mono text-[11px] font-bold transition-transform ${
+                      isCompleted
+                        ? "bg-emerald-600 text-white-soft shadow-xs"
+                        : isCurrent
+                          ? "bg-[#E88970] text-[#042422] shadow-[0_0_12px_rgba(232,137,112,0.6)] ring-4 ring-[#EDF4EF] scale-110"
+                          : "border border-forest/30 bg-[#EDF4EF] text-forest/60"
+                    }`}
+                  >
+                    {isCompleted ? "✓" : stage.number}
+                  </div>
+
+                  {/* Node Header Row */}
                   <button
                     type="button"
-                    onClick={() => setActive(item.slug)}
-                    onMouseEnter={() => setActive(item.slug)}
-                    className={`pathway-row group flex w-full items-start gap-4 border-t border-forest/10 px-3 py-4 text-left transition-colors duration-200 ${
-                      isActive ? "bg-white-soft/80" : "bg-transparent hover:bg-white-soft/40"
-                    }`}
-                    aria-pressed={isActive}
+                    onClick={() => setActiveStageId(isExpanded ? "" : stage.id)}
+                    aria-expanded={isExpanded}
+                    className="flex w-full items-start justify-between p-5 md:p-6 text-left"
                   >
-                    <span className="mt-0.5 w-6 text-[12px] font-bold text-coral">{item.number}</span>
-                    <span className="mt-0.5 text-forest/70">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        {icons[item.slug]}
-                      </svg>
-                    </span>
-                    <span className="flex-1">
-                      <span className="pathway-title block text-[19px] font-medium tracking-tight text-forest transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
-                        {item.title}
-                      </span>
-                      <span
-                        className={`mt-1 block max-w-xl text-[14px] leading-relaxed transition-opacity duration-[320ms] ${
-                          isActive ? "text-forest font-medium opacity-100" : "text-blue-gray opacity-80"
-                        }`}
-                      >
-                        {item.description}
-                      </span>
-                    </span>
+                    <div className="pr-4">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-[11.5px] font-semibold text-forest/60 uppercase">
+                          Stage {stage.number}
+                        </span>
+                        <span className="text-forest/30">·</span>
+                        <span
+                          className={`rounded px-2 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-wider ${
+                            isCurrent
+                              ? "bg-[#E88970]/20 text-[#B84A39]"
+                              : isCompleted
+                                ? "bg-emerald-600/15 text-emerald-800"
+                                : "bg-forest/8 text-forest/60"
+                          }`}
+                        >
+                          {isCurrent ? "Active Stage · You Are Here" : isCompleted ? "Completed" : "Upcoming"}
+                        </span>
+                      </div>
+
+                      <h3 className="editorial-serif mt-1 text-[21px] md:text-[23px] text-forest">
+                        {stage.title}
+                      </h3>
+
+                      <p className="mt-1 text-[14px] leading-relaxed text-forest/75 max-w-2xl">
+                        {stage.description}
+                      </p>
+                    </div>
+
                     <span
-                      className={`pathway-arrow mt-1 transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        isActive ? "text-coral font-bold translate-x-1" : "text-forest/40"
+                      className={`mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-forest/15 text-[14px] text-forest/70 transition-transform duration-200 ${
+                        isExpanded ? "rotate-90 bg-forest text-white-soft border-forest" : ""
                       }`}
                     >
                       →
                     </span>
                   </button>
-                </li>
+
+                  {/* Progressively Disclosed Detail Panel */}
+                  <AnimatePresence initial={false}>
+                    {isExpanded && (
+                      <motion.div
+                        key="content"
+                        initial={reduce ? false : { height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={reduce ? undefined : { height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        className="border-t border-forest/10 bg-[#FAF7F2]/60 px-5 pb-6 pt-4 md:px-6"
+                      >
+                        <div className="grid gap-6 md:grid-cols-2">
+                          {/* Column A: What happens & What you need */}
+                          <div className="space-y-4">
+                            <div>
+                              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-forest/60 block">
+                                What happens at this stage
+                              </span>
+                              <p className="mt-1 text-[13.5px] leading-relaxed text-forest/85">
+                                {stage.whatHappensHere}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-forest/60 block">
+                                Documents & preparations you may need
+                              </span>
+                              <ul className="mt-1.5 space-y-1 text-[13px] text-forest/80">
+                                {stage.whatYouMayNeed.map((item, idx) => (
+                                  <li key={idx} className="flex items-start gap-2">
+                                    <span className="text-[#E88970] font-bold">—</span>
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+
+                          {/* Column B: Questions for Oncologist & Actions */}
+                          <div className="space-y-4">
+                            <div>
+                              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#B84A39] block">
+                                Questions to ask your oncologist
+                              </span>
+                              <ul className="mt-1.5 space-y-1 text-[13px] text-forest/85">
+                                {stage.questionsForDoctor.map((q, idx) => (
+                                  <li key={idx} className="flex items-start gap-2">
+                                    <span className="text-[#B84A39] font-bold">?</span>
+                                    <span>{q}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            <div className="pt-2 flex flex-wrap items-center gap-3">
+                              <Link
+                                href={stage.actionHref || "/journey"}
+                                className="inline-flex items-center gap-1.5 rounded bg-forest px-4 py-2 text-[13px] font-semibold text-white-soft transition-opacity hover:opacity-90"
+                              >
+                                <span>{stage.actionLabel || "Explore Stage Details"}</span>
+                                <span>→</span>
+                              </Link>
+                              <Link
+                                href="/ai?task=appointment"
+                                className="text-[12.5px] font-medium text-forest underline hover:opacity-80"
+                              >
+                                Add to doctor visit checklist
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               );
             })}
-          </ul>
+          </div>
+        </div>
 
-          <AnimatePresence mode="wait">
-            <motion.aside
-              key={selected.slug}
-              initial={reduce ? false : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={reduce ? undefined : { opacity: 0, y: 8 }}
-              transition={{ duration: motionTokens.normal, ease: motionTokens.easeOutSoft }}
-              className="flex min-h-[300px] flex-col justify-between rounded-2xl border border-forest/10 bg-white-soft p-7 shadow-xs"
-            >
-              <div>
-                <p className="text-meta-ui text-coral">{selected.number}</p>
-                <h3 className="heading-sans-ui mt-3 text-forest">
-                  {selected.title}
-                </h3>
-                <p className="mt-4 text-[14.5px] leading-relaxed text-blue-gray">
-                  {selected.description}
-                </p>
-              </div>
-              <Button href={selected.href} className="mt-6 self-start text-[13.5px]">
-                Enter this pathway →
-              </Button>
-            </motion.aside>
-          </AnimatePresence>
+        {/* Bottom Journey Footer */}
+        <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-forest/12 pt-6 text-[13.5px] text-forest/80">
+          <p>
+            Stages 01–08 represent standard clinical progression across major oncology care centers in India.
+          </p>
+          <Link
+            href="/journey"
+            className="font-semibold text-forest underline hover:opacity-80 transition-opacity whitespace-nowrap"
+          >
+            Explore full patient pathway interactive map →
+          </Link>
         </div>
       </div>
     </section>

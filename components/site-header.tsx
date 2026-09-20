@@ -23,7 +23,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const reduce = useReducedMotion();
-  const tone = pathname === "/ai" ? "dark" : "light";
+  const tone = pathname === "/" || pathname === "/ai" ? "dark" : "light";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
