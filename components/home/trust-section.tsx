@@ -1,109 +1,148 @@
 import { Reveal } from "@/components/reveal";
 
-const governancePillars = [
-  {
-    category: "AI Assistance",
-    question: "What the system helps with",
-    description:
-      "Translating dense pathology reports into patient-friendly language, preparing targeted clinical questions for oncologist consultations, and orienting families across complex multi-step care pathways.",
-    status: "Active System",
-  },
-  {
-    category: "Boundaries",
-    question: "What it does not do",
-    description:
-      "ONCO-AID never provides autonomous medical diagnoses, does not calculate drug dosages, does not prescribe treatments, and never replaces a multidisciplinary tumor board or treating oncologist.",
-    status: "Clinical Guardrails",
-  },
-  {
-    category: "Clinical Sources",
-    question: "Where information comes from",
-    description:
-      "Educational guidance is grounded in established oncology consensus frameworks, including the Indian Council of Medical Research (ICMR), NCCN, and ESMO clinical guidelines adapted for Indian care settings.",
-    status: "Evidence Standard",
-  },
-  {
-    category: "Review Protocols",
-    question: "How information is verified",
-    description:
-      "Clinical content templates undergo periodic structured review. Synthetic examples and demonstration data are unambiguously flagged to ensure patients are never presented with unverified claims.",
-    status: "Verification Cadence",
-  },
-  {
-    category: "Data Privacy",
-    question: "How information is handled",
-    description:
-      "Engineered with client-side isolation aligned with India's Digital Personal Data Protection (DPDP) Act and DISHA principles. User queries and uploaded documents are processed without commercial data harvesting.",
-    status: "DPDP Aligned",
-  },
-];
-
 export function TrustSection() {
   return (
-    <section className="bg-forest py-20 text-white-soft md:py-28 border-t border-white-soft/10">
+    <section className="border-t border-forest/10 bg-[#fbf9f5] py-20 md:py-28 text-forest">
       <div className="container-page">
         <Reveal>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="label text-mint-deep">Clinical Governance</span>
-            <span className="text-[12px] text-white-soft/50">• Safety & Trust Standards</span>
+          <div className="max-w-2xl">
+            <p className="text-[12px] font-semibold tracking-[0.16em] uppercase text-forest/60">
+              Clinical Governance & Privacy
+            </p>
+            <h2 className="heading-serif-section mt-2.5 text-forest">
+              Built on clinical restraint, trust, and patient boundaries.
+            </h2>
+            <p className="mt-3 text-[15.5px] leading-relaxed text-forest/75">
+              ONCO-AID is designed to bring clarity to an overwhelming experience. We adhere to rigorous clinical boundaries and strict patient data privacy standards.
+            </p>
           </div>
-          <h2 className="heading-serif-section mt-3 text-white-soft">
-            How ONCO-AID handles clinical information.
-          </h2>
-          <p className="mt-3 max-w-2xl text-[15.5px] leading-relaxed text-white-soft/75">
-            Trust is earned through transparency, clinical restraint, and respect for patient privacy. We do not make claims of revolutionary algorithms or invent outcomes.
-          </p>
         </Reveal>
 
-        {/* Structured Governance Matrix */}
-        <div className="mt-12 overflow-hidden rounded-2xl border border-white-soft/12 bg-white-soft/4">
-          <div className="grid divide-y divide-white-soft/10 md:grid-cols-2 lg:grid-cols-3 md:divide-y-0 md:divide-x">
-            {governancePillars.slice(0, 3).map((pillar) => (
-              <div key={pillar.category} className="p-6 md:p-7 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-meta-ui text-mint">{pillar.category}</span>
-                    <span className="rounded-md bg-white-soft/8 px-2 py-0.5 text-[10.5px] text-white-soft/60">
-                      {pillar.status}
-                    </span>
-                  </div>
-                  <h3 className="heading-sans-ui mt-3 text-[17px] text-white-soft">
-                    {pillar.question}
-                  </h3>
-                  <p className="mt-2.5 text-[13.5px] leading-relaxed text-white-soft/75">
-                    {pillar.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+        {/* 2-Column Comparison Grid: Capabilities vs Strict Boundaries */}
+        <div className="mt-12 grid gap-8 lg:grid-cols-2">
+          {/* Column 1: What ONCO-AID Can Help With */}
+          <div className="rounded-lg border border-forest/15 bg-white-soft p-6 md:p-8">
+            <div className="flex items-center justify-between border-b border-forest/10 pb-4">
+              <span className="text-[11.5px] font-semibold tracking-[0.14em] uppercase text-forest/60">
+                Scope of Assistance
+              </span>
+              <span className="rounded bg-forest/8 px-2 py-0.5 font-mono text-[11px] font-semibold text-forest">
+                Permitted Use
+              </span>
+            </div>
+            <h3 className="heading-sans-ui mt-4 text-[18px] text-forest">
+              What ONCO-AID can help with
+            </h3>
+            <ul className="mt-4 space-y-3.5 text-[14.5px] leading-relaxed text-forest/85">
+              <li className="flex items-start gap-3">
+                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-forest text-[10px] text-white-soft">
+                  ✓
+                </span>
+                <span>
+                  <strong>Report Translation:</strong> Explaining dense histology, receptor biomarkers (ER, PR, HER2, Ki-67), and staging terms from your pathology documents.
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-forest text-[10px] text-white-soft">
+                  ✓
+                </span>
+                <span>
+                  <strong>Consultation Preparation:</strong> Generating evidence-grounded questions tailored to your diagnosis for discussions with your oncologist.
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-forest text-[10px] text-white-soft">
+                  ✓
+                </span>
+                <span>
+                  <strong>Care Pathway Navigation:</strong> Helping you and your family anticipate next steps—from initial biopsy to tumor board review and adjuvant therapy.
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-forest text-[10px] text-white-soft">
+                  ✓
+                </span>
+                <span>
+                  <strong>Specialist Discovery:</strong> Finding verified oncologists and accredited cancer centers in Bengaluru and across India.
+                </span>
+              </li>
+            </ul>
           </div>
 
-          <div className="grid divide-y divide-white-soft/10 border-t border-white-soft/10 md:grid-cols-2 md:divide-y-0 md:divide-x">
-            {governancePillars.slice(3).map((pillar) => (
-              <div key={pillar.category} className="p-6 md:p-7 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-meta-ui text-mint">{pillar.category}</span>
-                    <span className="rounded-md bg-white-soft/8 px-2 py-0.5 text-[10.5px] text-white-soft/60">
-                      {pillar.status}
-                    </span>
-                  </div>
-                  <h3 className="heading-sans-ui mt-3 text-[17px] text-white-soft">
-                    {pillar.question}
-                  </h3>
-                  <p className="mt-2.5 text-[13.5px] leading-relaxed text-white-soft/75">
-                    {pillar.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+          {/* Column 2: Explicit Boundaries */}
+          <div className="rounded-lg border border-[#b84a39]/25 bg-[#faf4f2] p-6 md:p-8">
+            <div className="flex items-center justify-between border-b border-[#b84a39]/20 pb-4">
+              <span className="text-[11.5px] font-semibold tracking-[0.14em] uppercase text-[#b84a39]">
+                Clinical Guardrails
+              </span>
+              <span className="rounded bg-[#b84a39]/10 px-2 py-0.5 font-mono text-[11px] font-semibold text-[#b84a39]">
+                Strict Boundaries
+              </span>
+            </div>
+            <h3 className="heading-sans-ui mt-4 text-[18px] text-forest">
+              What ONCO-AID does NOT do
+            </h3>
+            <ul className="mt-4 space-y-3.5 text-[14.5px] leading-relaxed text-forest/85">
+              <li className="flex items-start gap-3">
+                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#b84a39] text-[10px] text-white-soft">
+                  ✕
+                </span>
+                <span>
+                  <strong className="text-forest">ONCO-AID does not diagnose:</strong> We do not interpret symptoms to determine malignancy or deliver definitive diagnostic determinations.
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#b84a39] text-[10px] text-white-soft">
+                  ✕
+                </span>
+                <span>
+                  <strong className="text-forest">ONCO-AID does not prescribe:</strong> We do not recommend drug dosages, prescribe medication regimens, or adjust ongoing treatment plans.
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#b84a39] text-[10px] text-white-soft">
+                  ✕
+                </span>
+                <span>
+                  <strong className="text-forest">ONCO-AID does not replace a clinician:</strong> No algorithmic tool can substitute for an in-person evaluation by your surgical, medical, or radiation oncologist.
+                </span>
+              </li>
+            </ul>
+
+            <div className="mt-6 rounded border border-[#b84a39]/20 bg-white-soft/80 p-3.5 text-[12.5px] text-forest/80">
+              <strong className="text-forest">Emergency Care:</strong> For severe acute symptoms, post-operative complications, or medical emergencies, contact your hospital directly or dial <strong>112</strong> immediately.
+            </div>
           </div>
         </div>
 
-        {/* Disclaimer Bar */}
-        <div className="mt-6 flex items-center justify-between text-[11.5px] text-white-soft/50 px-2">
-          <span>ONCO-AID Clinical Standards &copy; 2026</span>
-          <span>For Educational Patient Decision-Support Only</span>
+        {/* Governance, Privacy & Review Metadata Row */}
+        <div className="mt-10 grid gap-6 rounded-lg border border-forest/12 bg-white-soft p-6 md:grid-cols-3">
+          <div>
+            <span className="text-[11px] font-semibold tracking-[0.14em] uppercase text-forest/60 block">
+              Data Privacy & Protection
+            </span>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-forest/80">
+              Aligned with India&apos;s Digital Personal Data Protection (DPDP) Act. Reports are processed securely; personal health information is never sold or used to train public foundation models.
+            </p>
+          </div>
+
+          <div>
+            <span className="text-[11px] font-semibold tracking-[0.14em] uppercase text-forest/60 block">
+              Clinical Review Standards
+            </span>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-forest/80">
+              Educational modules and report explanations are grounded in consensus guidelines from ICMR, NCCN, and ESMO, reviewed by qualified oncologists.
+            </p>
+          </div>
+
+          <div>
+            <span className="text-[11px] font-semibold tracking-[0.14em] uppercase text-forest/60 block">
+              Verification Cadence
+            </span>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-forest/80">
+              <strong className="text-forest font-semibold">Last clinically reviewed: August 2026.</strong> Regular updates ensure alignment with the latest clinical evidence and drug approvals in India.
+            </p>
+          </div>
         </div>
       </div>
     </section>

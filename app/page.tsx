@@ -1,40 +1,33 @@
-import { AIPreview } from "@/components/home/ai-preview";
-import { CancerExplorerPreview } from "@/components/home/cancer-explorer-preview";
-import { CareJourney } from "@/components/home/care-journey";
-import { FinalCta } from "@/components/home/final-cta";
-import { HomeHero } from "@/components/home/hero";
-import { ProductDemonstration } from "@/components/home/product-demonstration";
-import { PatientJourney } from "@/components/home/patient-journey";
-import { ResourcesPreview } from "@/components/home/resources-preview";
-import { SpecialistsPreview } from "@/components/home/specialists-preview";
-import { JsonLd } from "@/components/json-ld";
-import { TrustSection } from "@/components/home/trust-section";
-import { MobileHomeDashboard } from "@/components/home/mobile-home-dashboard";
 import { CinematicIntro } from "@/components/home/cinematic-intro";
+import { HomeHero } from "@/components/home/hero";
+import { WhereAreYou } from "@/components/home/where-are-you";
+import { ProductDemonstration } from "@/components/home/product-demonstration";
+import { HumanCare } from "@/components/home/human-care";
+import { TrustSection } from "@/components/home/trust-section";
+import { JsonLd } from "@/components/json-ld";
 
 export default function HomePage() {
   return (
-    <main id="main">
+    <main id="main" className="min-h-screen bg-ivory">
       <JsonLd />
-      {/* Cinematic Opening Sequence (First-time visitor experience) */}
+
+      {/* Opening Cinematic Sequence (Plays on every visit, click/tap anywhere to skip) */}
       <CinematicIntro />
 
-      {/* Dedicated Mobile Product Experience (Focused Patient Dashboard) */}
-      <MobileHomeDashboard />
+      {/* Hero Section */}
+      <HomeHero />
 
-      {/* Editorial Healthcare Institution Presentation (Desktop & Tablet) */}
-      <div className="hidden md:block">
-        <HomeHero />
-        <ProductDemonstration />
-        <PatientJourney />
-        <CareJourney />
-        <AIPreview />
-        <CancerExplorerPreview />
-        <SpecialistsPreview />
-        <ResourcesPreview />
-        <TrustSection />
-        <FinalCta />
-      </div>
+      {/* Where Are You Right Now? - Pure Typographic Navigation */}
+      <WhereAreYou />
+
+      {/* Realistic Product Demonstration - Pathology Report Decoder */}
+      <ProductDemonstration />
+
+      {/* Human Care - Bengaluru Launch Geography */}
+      <HumanCare />
+
+      {/* Clinical Governance, Trust, Boundaries & Privacy */}
+      <TrustSection />
     </main>
   );
 }

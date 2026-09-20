@@ -23,7 +23,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const reduce = useReducedMotion();
-  const tone = pathname === "/" || pathname === "/ai" ? "dark" : "light";
+  const tone = pathname === "/ai" ? "dark" : "light";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -269,9 +269,9 @@ export function SiteHeader() {
       {!open && (
         <nav
           aria-label="Mobile Quick Navigation"
-          className="fixed inset-x-0 bottom-2.5 z-40 lg:hidden pointer-events-none px-3"
+          className="fixed inset-x-0 bottom-3 z-40 lg:hidden pointer-events-none px-3"
         >
-          <div className="pointer-events-auto mx-auto max-w-[340px] rounded-2xl border border-forest/10 bg-[#f6f1e8]/92 p-1 shadow-[0_4px_16px_rgba(8,40,40,0.08)] backdrop-blur-lg">
+          <div className="pointer-events-auto mx-auto max-w-[320px] rounded-full border border-forest/10 bg-[#faf7f2]/95 px-2 py-1 shadow-[0_2px_12px_rgba(8,40,40,0.06)] backdrop-blur-md">
             <div className="flex items-center justify-around">
               {mobileQuickNav.map((item) => {
                 const isActive = pathname === item.href;
@@ -279,10 +279,10 @@ export function SiteHeader() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`relative flex flex-col items-center justify-center min-w-[48px] min-h-[40px] rounded-xl px-2 py-0.5 text-[10px] font-medium transition-colors ${
+                    className={`relative flex flex-col items-center justify-center min-w-[44px] min-h-[38px] rounded-full px-2 py-0.5 text-[10px] font-medium transition-colors ${
                       isActive
                         ? "text-forest font-semibold bg-forest/8"
-                        : "text-forest/70 hover:text-forest hover:bg-forest/4"
+                        : "text-forest/65 hover:text-forest hover:bg-forest/4"
                     }`}
                   >
                     <svg
